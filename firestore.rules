@@ -1,0 +1,65 @@
+rules_version = '2';
+
+// Peraturan projek Firebase kad Eusoff (project-50fca4c2-1177-4292-916,
+// "Majlis Eusoff"). Projek ini milik kad Eusoff sahaja — kad Zaitul guna
+// projek lain dengan peraturannya sendiri.
+//
+//   rsvp_eusoff/   — kehadiran tetamu.
+//   ucapan_eusoff/ — nama + ucapan, dipaparkan pada kad, boleh dibalas.
+//
+// Keputusan Zaitul (17 Sep 2026), selepas diberitahu risikonya: senarai RSVP
+// terbuka kepada sesiapa yang ada link, tanpa log masuk (baca, sunting,
+// padam, balas). Masa jawab kekal terkunci dan setiap dokumen mesti sah.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /rsvp_eusoff/{id} {
+      allow create: if isRsvpSah(request.resource.data);
+      allow read:   if true;
+      allow delete: if true;
+      allow update: if request.resource.data.diff(resource.data)
+                         .affectedKeys().hasOnly(['nama', 'kehadiran', 'bilangan', 'ucapan'])
+                    && isRsvpSah(request.resource.data);
+    }
+
+    match /ucapan_eusoff/{id} {
+      // Ucapan BAHARU tidak boleh dicipta siap berbalasan (create guna isUcapanSah).
+      allow create: if isUcapanSah(request.resource.data);
+      allow read:   if true;
+      allow delete: if true;
+      allow update: if request.resource.data.diff(resource.data)
+                         .affectedKeys().hasOnly(['nama', 'teks', 'balasan', 'masaBalasan'])
+                    && isUcapanBerbalasSah(request.resource.data);
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
+
+function isRsvpSah(d) {
+  return d.keys().hasOnly(['nama', 'kehadiran', 'bilangan', 'ucapan', 'masa'])
+      && d.keys().hasAll(['nama', 'kehadiran', 'bilangan', 'masa'])
+      && d.nama is string      && d.nama.size() > 0 && d.nama.size() <= 120
+      && d.kehadiran in ['Hadir', 'Tidak Hadir']
+      && d.bilangan is int     && d.bilangan >= 0   && d.bilangan <= 50
+      && d.masa is string      && d.masa.size() <= 40
+      && (!('ucapan' in d.keys()) || (d.ucapan is string && d.ucapan.size() <= 600));
+}
+
+function isUcapanSah(d) {
+  return d.keys().hasOnly(['nama', 'teks', 'masa'])
+      && d.nama is string && d.nama.size() > 0 && d.nama.size() <= 120
+      && d.teks is string && d.teks.size() > 0 && d.teks.size() <= 600
+      && d.masa is string && d.masa.size() <= 40;
+}
+
+function isUcapanBerbalasSah(d) {
+  return d.keys().hasOnly(['nama', 'teks', 'masa', 'balasan', 'masaBalasan'])
+      && d.nama is string && d.nama.size() > 0 && d.nama.size() <= 120
+      && d.teks is string && d.teks.size() > 0 && d.teks.size() <= 600
+      && d.masa is string && d.masa.size() <= 40
+      && (!('balasan' in d.keys()) || (d.balasan is string && d.balasan.size() <= 600))
+      && (!('masaBalasan' in d.keys()) || (d.masaBalasan is string && d.masaBalasan.size() <= 40));
+}

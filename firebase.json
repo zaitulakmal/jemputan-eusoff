@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site": "majlis-eusoff-zaitul",
+    "site": "majlis-eusoff",
     "public": ".",
     "ignore": [
       "firebase.json",
@@ -15,34 +15,50 @@
       "assets/gambar/**",
       "assets/taman-*.svg",
       "assets/ranting.svg",
-      "tools/**"
+      "tools/**",
+      "firestore.rules"
     ],
     "headers": [
       {
         "source": "assets/**",
         "headers": [
-          { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=31536000, immutable"
+          }
         ]
       },
       {
         "source": "/",
         "headers": [
-          { "key": "Cache-Control", "value": "no-cache, must-revalidate" }
+          {
+            "key": "Cache-Control",
+            "value": "no-cache, must-revalidate"
+          }
         ]
       },
       {
         "source": "**/*.html",
         "headers": [
-          { "key": "Cache-Control", "value": "no-cache, must-revalidate" }
+          {
+            "key": "Cache-Control",
+            "value": "no-cache, must-revalidate"
+          }
         ]
       },
       {
         "source": "/senarai-*",
         "headers": [
-          { "key": "Cache-Control", "value": "no-cache, must-revalidate" }
+          {
+            "key": "Cache-Control",
+            "value": "no-cache, must-revalidate"
+          }
         ]
       }
     ],
     "cleanUrls": true
+  },
+  "firestore": {
+    "rules": "firestore.rules"
   }
 }
