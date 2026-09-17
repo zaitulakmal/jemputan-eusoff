@@ -1,0 +1,693 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Walimatul Urus · Eusoff &amp; Zaitul</title>
+<meta name="theme-color" content="#efe4da">
+<!-- Safari iOS menukar nombor telefon jadi pautan biru secara automatik -->
+<meta name="format-detection" content="telephone=no,date=no,address=no,email=no">
+<meta property="og:title" content="Walimatul Urus · Eusoff &amp; Zaitul">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:,">
+<!--
+  FAIL INI DIJANA oleh tools/bina.py daripada tools/shell.html.
+  Jangan sunting index.html terus — sunting tools/shell.html (CONFIG,
+  TETAMU, gaya) atau KANDUNGAN dalam tools/bina.py, kemudian:
+      python3 tools/bina.py
+-->
+
+<script>
+/* ═══ TUKAR MAKLUMAT DI SINI (dalam tools/shell.html) ═══ */
+window.CONFIG = {
+  tarikhMajlis: "2027-03-20T08:00:00+08:00",   // sasaran kiraan detik
+  peta:   "https://www.google.com/maps/search/?api=1&query=Asiana+Grand+Hall+Menara+PKNS+Petaling+Jaya",
+  // "A Thousand Years (Wedding Version) featuring Pachelbel's Canon" — piano solo,
+  // Paul Hankinson, 6:02. Pilihan lain yang diuji main: Red Swan piano (sWcgKts80vM, 4:57).
+  lagu:   "Zdd_j-Y-Xt8",   // ID video YouTube
+  waRsvp: "",              // biar kosong; isi kalau nak RSVP masuk WhatsApp juga
+
+  /* Pangkalan data sama dengan kad Zaitul, tetapi koleksi berasingan.
+     Peraturan keselamatan diurus dalam repo jemputan-eusoff-zaitul. */
+  rsvpDb: {
+    projectId: "fir-demo-b08a9",
+    apiKey:    "AIzaSyC2idlHM9rhMMKxc7NpCNDNOP_NMApQjcc",
+    rsvp:      "rsvp_eusoff",
+    ucapan:    "ucapan_eusoff"
+  }
+};
+
+/* Senarai jemputan. Hanya nama dalam senarai ini boleh hantar RSVP.
+   Biarkan kosong kalau nak sesiapa sahaja boleh RSVP.
+     "Ahmad bin Ali"                    -> tiada had orang
+     { nama: "Ahmad bin Ali", pax: 2 }  -> maksimum 2 orang
+   senarai.html dan tools/laporan.py membaca blok ini terus. */
+window.TETAMU = [
+  // { nama: "Ahmad bin Ali", pax: 2 },
+  // "Siti binti Osman",
+];
+</script>
+
+<style>
+@font-face{font-family:'kad-bodoni';font-weight:400;font-style:normal;font-display:block;src:url('assets/kad/a95b254f9cdced74ced95bd5bec802ba.woff') format('woff');}
+@font-face{font-family:'kad-bodoni';font-weight:400;font-style:italic;font-display:block;src:url('assets/kad/83280613fc66ab173d1ee86c8ca899a0.woff') format('woff');}
+@font-face{font-family:'kad-alexbrush';font-weight:400;font-style:normal;font-display:block;src:url('assets/kad/19126e9a4ea037168bea3a9575c93aff.woff') format('woff');}
+@font-face{font-family:'kad-snell';font-weight:400;font-style:normal;font-display:block;src:url('assets/kad/2a0b5f90f195029a3b22e69462e34243.woff') format('woff');}
+@font-face{font-family:'kad-snell';font-weight:700;font-style:normal;font-display:block;src:url('assets/kad/293dc31150f9d4304287828e0dd5a2e4.woff') format('woff');}
+@font-face{font-family:'kad-citadel';font-weight:400;font-style:normal;font-display:block;src:url('assets/kad/cbeb3d4cd3a6ee4d766a02539f1808d8.woff') format('woff');}
+@font-face{font-family:'kad-cormorant';font-weight:400;font-style:normal;font-display:block;src:url('assets/kad/77fbf36c56a33ec9d32065083bba3023.woff') format('woff');}
+@font-face{font-family:'kad-cormorant';font-weight:700;font-style:normal;font-display:block;src:url('assets/kad/2c01b110377d85fc02c1a5ee0a59e482.woff') format('woff');}
+@font-face{font-family:'kad-cormorant';font-weight:700;font-style:italic;font-display:block;src:url('assets/kad/2883edd9004d7019bbfccbdb94743f24.woff') format('woff');}
+@font-face{font-family:'kad-playfair';font-weight:400;font-style:normal;font-display:block;src:url('assets/kad/ff9886dcdabfbc446fbd01801ec0141f.woff') format('woff');}
+@font-face{font-family:'kad-playfair';font-weight:400;font-style:italic;font-display:block;src:url('assets/kad/b13d69694f0122da640e59bc600857e7.woff') format('woff');}
+@font-face{font-family:'kad-playfair';font-weight:700;font-style:normal;font-display:block;src:url('assets/kad/8ee12c835c4dc6d6d4f0f3f418e22d0d.woff') format('woff');}
+
+/* Palet nude + biru (sama dengan tools/warna.py) */
+:root{ --nude:#efe4da; --nude-2:#f7f1eb; --biru-tua:#3d5577; --biru:#7d93b2; --dakwat:#2d3a52; }
+
+*,*::before,*::after{ box-sizing:border-box; }
+html,body{ margin:0; padding:0; overflow-x:hidden; max-width:100%; }
+body{ background:var(--nude); -webkit-text-size-adjust:100%; -webkit-tap-highlight-color:transparent; }
+img{ display:block; border:0; }
+[hidden]{ display:none !important; }
+:focus-visible{ outline:2px solid var(--biru-tua); outline-offset:2px; }
+a[href^="tel"], a[href^="sms"]{ color:inherit !important; text-decoration:none !important; }
+
+/* ── kanvas ── */
+.wrap{ position:relative; width:100%; overflow:hidden; background:var(--nude); }
+.stage{ position:absolute; top:0; left:0; transform-origin:0 0; }
+.frame{ position:relative; overflow:hidden; }
+
+/* Lapisan pendedahan: kotak sempadan kandungannya sahaja (bukan seluruh
+   kanvas), dan transform dibuang selepas selesai (.siap) — kad Zaitul
+   pernah dibunuh Safari iOS kerana lapisan komposit bersaiz kanvas. */
+.band{
+  position:absolute; pointer-events:none; opacity:0; transform:translateY(34px);
+  transition:opacity 1s cubic-bezier(.22,.7,.3,1), transform 1.05s cubic-bezier(.22,.7,.3,1);
+}
+.band.in{ opacity:1; transform:none; }
+.band.siap{ transition:none; transform:none; will-change:auto; }
+.band .bt, .band .yt, .band #rsvp-link, .band .home-btn{ pointer-events:auto; }
+
+.im{ position:absolute; overflow:hidden; }
+.im>img{ position:absolute; max-width:none; }
+.sh{ position:absolute; }
+.sh>svg{ display:block; overflow:visible; }
+/* teks: bekas flex supaya teks satu baris yang lebih lebar daripada kotak
+   melimpah sama rata ke kiri dan kanan, bukan ke kanan sahaja */
+.t{ position:absolute; display:flex; align-items:center; justify-content:center; }
+/* baris disusun oleh bina.py (balutan asal Canva jadi \n), jadi tiada
+   balutan automatik — baris yang terlalu panjang dikecilkan oleh muatTeks */
+.t>span{ display:block; flex:none; width:max-content; white-space:pre; }
+#rsvp-link{ cursor:pointer; }
+.bt{ position:absolute; display:flex; align-items:center; justify-content:center;
+  text-decoration:none; line-height:1; white-space:nowrap; cursor:pointer; }
+.home-btn{ cursor:pointer; transition:transform .25s ease; }
+.home-btn:hover{ transform:translateY(-3px); }
+
+/* rama-rama: mengepak di tempat, seperti rama-rama beranimasi templat asal */
+.kupu-diam{ position:absolute; pointer-events:none; }
+.kupu-diam img{ display:block; width:100%; height:auto; transform-origin:50% 50%;
+  animation:kepak .62s ease-in-out infinite alternate; }
+.kupu-diam.k2 img{ animation-duration:.54s; animation-delay:-.2s; }
+@keyframes kepak{ from{ transform:scaleX(1); } to{ transform:scaleX(.62); } }
+
+/* ── kiraan detik (ganti benaman betterimages.ai) ── */
+.cd{ position:absolute; display:flex; flex-direction:column; justify-content:center; color:var(--biru-tua); }
+.cd-num{ display:flex; justify-content:center; font-family:'kad-playfair',Georgia,serif; font-weight:400;
+  font-size:48px; line-height:1; letter-spacing:.01em; font-variant-numeric:lining-nums tabular-nums; }
+.cd-num>span{ display:inline-block; white-space:nowrap; }
+.cd-lab{ display:flex; margin-top:8px; font-family:'kad-playfair',Georgia,serif; font-weight:700;
+  font-size:12px; letter-spacing:.06em; }
+.cd-lab span{ flex:1; text-align:center; }
+
+/* ── kalendar (dibina semula untuk bulan majlis) ── */
+.kal{ position:absolute; color:var(--biru-tua); text-align:center; }
+.kal-tajuk{ font-family:'kad-snell','Apple Chancery',cursive; line-height:1; }
+.kal-grid{ display:grid; grid-template-columns:repeat(7,1fr); align-items:center; }
+/* Bodoni FLF: angka sebaris (Cormorant guna angka gaya lama yang naik turun) */
+.kal-kepala{ font-family:'kad-bodoni',Didot,Georgia,serif; font-style:italic; }
+.kal-hari{ font-family:'kad-bodoni',Didot,Georgia,serif; font-variant-numeric:lining-nums; }
+.kal-hati{ position:relative; display:inline-flex; align-items:center; justify-content:center; }
+.kal-hati svg{ position:absolute; inset:0; margin:auto; }
+.kal-hati b{ position:relative; font-weight:600; color:var(--nude); }
+
+/* ── muzik ── */
+.yt{ cursor:pointer; z-index:5; }
+#yt-frame{ position:fixed; left:0; bottom:0; width:2px; height:2px; opacity:.01;
+  pointer-events:none; border:0; z-index:-1; }
+.spinning>img{ animation:spin 4s linear infinite; }
+@keyframes spin{ to{ transform:rotate(360deg); } }
+
+/* ── muka depan ── */
+#cover{ position:fixed; inset:0; z-index:60; background:var(--nude); overflow:hidden;
+  height:100vh; height:100dvh; transform-origin:50% 0; transition:opacity .7s ease, visibility .7s; }
+#cover.gone{ opacity:0; visibility:hidden; transform:translateY(-104%) scale(1.18);
+  transition:transform 1.15s cubic-bezier(.6,0,.25,1), opacity .95s ease .15s, visibility 1.15s; }
+#cover .stage{ cursor:pointer; }
+body.locked{ overflow:hidden; height:100vh; height:100dvh; }
+
+/* ── RSVP (ganti codelet Canva; gaya ikut templat, warna nude + biru) ── */
+.rsvp{ background:var(--nude-2); padding:40px 20px 64px; font-family:'kad-playfair',Georgia,serif; color:var(--dakwat); }
+.rsvp-card, .wishes-title, #wishes, .credit{ max-width:470px; margin-left:auto; margin-right:auto; }
+.rsvp-card{ background:#fff; border:1px solid rgba(61,85,119,.14); border-radius:16px;
+  padding:30px 24px 30px; box-shadow:0 8px 28px rgba(45,58,82,.08); }
+.rsvp-title{ font-weight:700; font-size:30px; line-height:1.2; color:var(--biru-tua); margin:0 0 8px; text-align:center; }
+.rsvp-sub{ font-size:15px; line-height:1.5; color:#55607a; margin:0 0 24px; text-align:center; }
+.fl{ display:block; font-size:15px; font-weight:700; color:var(--biru-tua); margin:0 0 8px; }
+.fi{ width:100%; padding:12px 14px; font:inherit; font-size:16px; color:var(--dakwat);
+  background:#fbf8f5; border:1px solid rgba(61,85,119,.22); border-radius:10px; outline:none;
+  margin-bottom:18px; transition:border-color .2s; -webkit-appearance:none; appearance:none; }
+.fi:focus{ border-color:var(--biru-tua); }
+.fi::placeholder{ color:#a3a8b5; }
+.ta{ min-height:104px; resize:vertical; line-height:1.5; }
+.ac-wrap{ position:relative; margin-bottom:18px; }
+.ac-wrap .fi{ margin-bottom:0; }
+.ac{ position:absolute; z-index:20; left:0; right:0; top:calc(100% + 5px); margin:0; padding:6px;
+  list-style:none; max-height:216px; overflow-y:auto; background:#fff;
+  border:1px solid rgba(61,85,119,.22); border-radius:10px; box-shadow:0 12px 28px rgba(45,58,82,.16); }
+.ac li{ padding:11px 12px; border-radius:7px; cursor:pointer; font-size:16px; }
+.ac li:hover{ background:#eef1f6; color:var(--biru-tua); }
+.fi.err{ border-color:#b4404f; background:#fffafa; }
+.fld-err{ margin:-10px 0 16px; font-size:14px; line-height:1.45; color:#a3313f; }
+.pax-hint{ margin:-10px 0 16px; font-size:14px; color:var(--biru-tua); opacity:.8; }
+.seg{ display:flex; gap:10px; margin-bottom:18px; }
+.sg{ flex:1; position:relative; cursor:pointer; }
+.sg input{ position:absolute; opacity:0; pointer-events:none; }
+.sg span{ display:block; text-align:center; padding:11px 8px; font-size:15px; font-weight:700; color:var(--biru-tua);
+  background:#fff; border:1px solid rgba(61,85,119,.25); border-radius:99px; transition:.2s; }
+.sg input:checked + span{ background:var(--biru-tua); border-color:var(--biru-tua); color:#fff; }
+.sg input:focus-visible + span{ outline:2px solid var(--biru); outline-offset:2px; }
+.sb{ width:100%; padding:14px; font:inherit; font-size:16px; font-weight:700; cursor:pointer;
+  background:var(--biru-tua); color:#fff; border:0; border-radius:99px; transition:filter .2s; }
+.sb:hover{ filter:brightness(1.12); }
+.sb[disabled]{ opacity:.65; cursor:default; }
+.ok{ display:none; margin:18px 0 0; padding:14px 16px; text-align:center; font-size:15px;
+  color:var(--biru-tua); background:#f3f6fa; border:1px solid rgba(61,85,119,.18); border-radius:10px; }
+.ok.show{ display:block; }
+.ok.gagal{ color:#a3313f; border-color:rgba(163,49,63,.35); background:#fff7f7; }
+.wishes-title{ font-weight:400; font-style:italic; font-size:24px; color:var(--biru-tua);
+  text-align:center; margin:40px auto 16px; }
+.wish{ background:#fff; border:1px solid rgba(61,85,119,.12); border-radius:12px; padding:16px 18px; margin-bottom:12px; }
+.wish p{ margin:0; font-style:italic; font-size:16px; line-height:1.55; color:var(--dakwat); overflow-wrap:anywhere; }
+.wish b{ display:block; margin-top:6px; font-weight:400; font-size:14px; color:#7a8296; }
+.wish .balas{ margin-top:10px; padding:8px 12px; border-left:2px solid var(--biru); background:#f3f6fa;
+  border-radius:0 10px 10px 0; }
+.wish .balas small{ display:block; margin-bottom:2px; font-size:11px; font-weight:700; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--biru-tua); }
+.wish .balas span{ display:block; font-size:15px; line-height:1.5; color:var(--dakwat); overflow-wrap:anywhere; }
+.wish-empty{ text-align:center; color:#7a8296; font-size:15px; font-style:italic; }
+.credit{ margin-top:48px; text-align:center; color:var(--biru-tua); }
+.credit p{ margin:0; font-size:14px; letter-spacing:.05em; opacity:.75; font-style:italic; }
+.credit .credit-name{ margin-top:6px; font-size:19px; font-weight:700; font-style:italic; opacity:1; }
+
+@media (prefers-reduced-motion:reduce){
+  .spinning>img, .kupu-diam img{ animation:none; }
+  #cover, #cover.gone{ transition:opacity .3s; transform:none; }
+  .band{ opacity:1; transform:none; transition:none; }
+}
+</style>
+</head>
+<body class="locked">
+
+<div id="cover" role="button" tabindex="0" aria-label="Buka jemputan">
+  <div class="stage" id="stage-cover" data-h="768">
+    <div class="frame" style="width:1366px;height:768px;background:#efe4da">
+<div class="im" style="left:473.23px;top:208.58px;width:419.53px;height:314.65px"><img src="assets/kad/254c8a2b0d7b.webp" style="left:-0.00px;top:0.00px;width:419.53px;height:314.65px" alt="" loading="lazy"></div>
+<div class="im" style="left:655.26px;top:365.91px;width:55.47px;height:57.13px"><img src="assets/kad/33d009a20b50.webp" style="left:0.00px;top:0.00px;width:55.47px;height:57.13px" alt="" loading="lazy"></div>
+<div class="t" style="left:528.59px;top:129.70px;width:308.83px;height:35.13px;text-align:center"><span style="font-size:29.333px;line-height:49.732px"><span style="font-family:'kad-cormorant',Georgia,serif;font-size:29.333px;line-height:49.732px;color:#3d5577;font-weight:400;font-style:normal">Akad Cinta Hingga Syurga</span></span></div>
+<div class="t" data-muat="367.7" style="left:561.43px;top:181.83px;width:159.64px;height:35.13px;text-align:center;transform:scale(1.523099);transform-origin:0 0"><span style="font-size:29.333px;line-height:41.067px"><span style="font-family:'kad-snell','Apple Chancery',cursive;font-size:29.333px;line-height:41.067px;color:#3d5577;font-weight:400;font-style:normal">Eusoff &amp; Zaitul</span></span></div>
+</div>
+  </div>
+</div>
+
+<div class="wrap" id="wrap-main">
+  <div class="stage" id="stage-main" data-h="4050">
+    <div class="frame" style="width:1366px;height:4050px;background:#efe4da">
+<div class="band" style="left:451.41px;top:0.00px;width:561.42px;height:2529.72px">
+<div class="sh" style="left:107.63px;top:346.92px;width:112.12px;height:564.57px"><svg viewBox="0 0 500 2517.7" preserveAspectRatio="none" width="100%" height="100%"><defs><clipPath id="jalur1"><path d="M462.4 2464.6c0 2.4-2 4.4-4.4 4.4H42c-2.4 0-4.4-2-4.4-4.4v-566.4c0-2.4 2-4.4 4.4-4.4h416c2.4 0 4.4 2 4.4 4.4v566.4z"/></clipPath><clipPath id="jalur2"><path d="M462.4 1849.6c0 2.4-2 4.4-4.4 4.4H42c-2.4 0-4.4-2-4.4-4.4v-566.4c0-2.4 2-4.4 4.4-4.4h416c2.4 0 4.4 2 4.4 4.4v566.4z"/></clipPath><clipPath id="jalur3"><path d="M462.4 619.5c0 2.4-2 4.4-4.4 4.4H42c-2.4 0-4.4-2-4.4-4.4V53.1c0-2.4 2-4.4 4.4-4.4h416c2.4 0 4.4 2 4.4 4.4v566.4z"/></clipPath><clipPath id="jalur4"><path d="M462.4 1234.5c0 2.4-2 4.4-4.4 4.4H42c-2.4 0-4.4-2-4.4-4.4V668.1c0-2.4 2-4.4 4.4-4.4h416c2.4 0 4.4 2 4.4 4.4v566.4z"/></clipPath></defs><path d="M500 2513.3c0 2.4-2 4.4-4.4 4.4H4.4c-2.4 0-4.4-2-4.4-4.4V4.4C0 2 2 0 4.4 0h491.1c2.4 0 4.4 2 4.4 4.4l.1 2508.9z" fill="#7d93b2"/><image href="assets/kad/daef4ea51c7c.webp" x="37.6" y="1893.8" width="424.8" height="575.2" preserveAspectRatio="xMidYMid slice" clip-path="url(#jalur1)"/><image href="assets/kad/729f8853028a.webp" x="37.6" y="1278.8" width="424.8" height="575.2" preserveAspectRatio="xMidYMid slice" clip-path="url(#jalur2)"/><image href="assets/kad/63f4c847d97a.webp" x="37.6" y="48.7" width="424.8" height="575.2" preserveAspectRatio="xMidYMid slice" clip-path="url(#jalur3)"/><image href="assets/kad/595f41e639f8.webp" x="37.6" y="663.7" width="424.8" height="575.2" preserveAspectRatio="xMidYMid slice" clip-path="url(#jalur4)"/></svg></div>
+<div class="im" style="left:51.28px;top:-13.41px;width:412.81px;height:412.81px"><img src="assets/kad/d324c99e1ae2.webp" style="left:-0.00px;top:-0.00px;width:412.81px;height:412.81px" alt="" loading="lazy"></div>
+<div class="im" style="left:217.93px;top:588.18px;width:287.62px;height:458.00px"><img src="assets/kad/8b0d0c253efc.webp" style="left:-17.71px;top:0.00px;width:305.33px;height:458.00px" alt="" loading="lazy"></div>
+<div class="im yt vinyl" id="yt-wrap" role="button" tabindex="0" aria-label="Main atau henti muzik" style="left:184.88px;top:300.57px;width:125.80px;height:125.80px"><img src="assets/kad/77a4669d445c.webp" style="left:-0.00px;top:-0.00px;width:125.80px;height:125.80px" alt="" loading="lazy"></div>
+<div class="im" style="left:204.41px;top:300.57px;width:289.24px;height:350.70px"><img src="assets/kad/3d07298cedc8.webp" style="left:0.00px;top:-0.00px;width:289.24px;height:361.42px" alt="" loading="lazy"></div>
+<a class="bt" id="btn-peta" href="#" target="_blank" rel="noopener" style="left:278.90px;top:939.08px;width:148.26px;height:42.00px;background:#3d5577;border:2.0px solid #231f20;border-radius:100.0px;color:#ffffff;font-family:'kad-cormorant',Georgia,serif;font-size:18.667px;font-weight:700">Google Maps</a>
+<div class="im" style="left:107.95px;top:1781.29px;width:310.45px;height:51.10px"><img src="assets/kad/99644c129c36.webp" style="left:0.00px;top:0.00px;width:310.45px;height:51.10px" alt="" loading="lazy"></div>
+<div class="im" style="left:111.13px;top:1974.04px;width:310.45px;height:51.10px"><img src="assets/kad/99644c129c36.webp" style="left:0.00px;top:0.00px;width:310.45px;height:51.10px" alt="" loading="lazy"></div>
+<div class="kal" style="left:84.24px;top:2026.13px;width:371.00px;height:463.58px"><div class="kal-tajuk" style="position:absolute;left:0;right:0;top:39.68px;font-size:82.66px">March</div><span class="kal-kepala" style="position:absolute;left:22.15px;width:46.29px;top:154.42px;font-size:13.23px;line-height:17.19px">Sun</span><span class="kal-kepala" style="position:absolute;left:70.43px;width:46.29px;top:154.42px;font-size:13.23px;line-height:17.19px">Mon</span><span class="kal-kepala" style="position:absolute;left:118.05px;width:46.29px;top:154.42px;font-size:13.23px;line-height:17.19px">Tue</span><span class="kal-kepala" style="position:absolute;left:165.33px;width:46.29px;top:154.42px;font-size:13.23px;line-height:17.19px">Wed</span><span class="kal-kepala" style="position:absolute;left:213.28px;width:46.29px;top:154.42px;font-size:13.23px;line-height:17.19px">Thu</span><span class="kal-kepala" style="position:absolute;left:259.90px;width:46.29px;top:154.42px;font-size:13.23px;line-height:17.19px">Fri</span><span class="kal-kepala" style="position:absolute;left:306.19px;width:46.29px;top:154.42px;font-size:13.23px;line-height:17.19px">Sat</span><span class="kal-hari" style="position:absolute;left:70.43px;width:46.29px;top:182.19px;height:26.45px;line-height:26.45px;font-size:15.21px">1</span><span class="kal-hari" style="position:absolute;left:118.05px;width:46.29px;top:182.19px;height:26.45px;line-height:26.45px;font-size:15.21px">2</span><span class="kal-hari" style="position:absolute;left:165.33px;width:46.29px;top:182.19px;height:26.45px;line-height:26.45px;font-size:15.21px">3</span><span class="kal-hari" style="position:absolute;left:213.28px;width:46.29px;top:182.19px;height:26.45px;line-height:26.45px;font-size:15.21px">4</span><span class="kal-hari" style="position:absolute;left:259.90px;width:46.29px;top:182.19px;height:26.45px;line-height:26.45px;font-size:15.21px">5</span><span class="kal-hari" style="position:absolute;left:306.19px;width:46.29px;top:182.19px;height:26.45px;line-height:26.45px;font-size:15.21px">6</span><span class="kal-hari" style="position:absolute;left:22.15px;width:46.29px;top:237.91px;height:26.45px;line-height:26.45px;font-size:15.21px">7</span><span class="kal-hari" style="position:absolute;left:70.43px;width:46.29px;top:237.91px;height:26.45px;line-height:26.45px;font-size:15.21px">8</span><span class="kal-hari" style="position:absolute;left:118.05px;width:46.29px;top:237.91px;height:26.45px;line-height:26.45px;font-size:15.21px">9</span><span class="kal-hari" style="position:absolute;left:165.33px;width:46.29px;top:237.91px;height:26.45px;line-height:26.45px;font-size:15.21px">10</span><span class="kal-hari" style="position:absolute;left:213.28px;width:46.29px;top:237.91px;height:26.45px;line-height:26.45px;font-size:15.21px">11</span><span class="kal-hari" style="position:absolute;left:259.90px;width:46.29px;top:237.91px;height:26.45px;line-height:26.45px;font-size:15.21px">12</span><span class="kal-hari" style="position:absolute;left:306.19px;width:46.29px;top:237.91px;height:26.45px;line-height:26.45px;font-size:15.21px">13</span><span class="kal-hari" style="position:absolute;left:22.15px;width:46.29px;top:293.63px;height:26.45px;line-height:26.45px;font-size:15.21px">14</span><span class="kal-hari" style="position:absolute;left:70.43px;width:46.29px;top:293.63px;height:26.45px;line-height:26.45px;font-size:15.21px">15</span><span class="kal-hari" style="position:absolute;left:118.05px;width:46.29px;top:293.63px;height:26.45px;line-height:26.45px;font-size:15.21px">16</span><span class="kal-hari" style="position:absolute;left:165.33px;width:46.29px;top:293.63px;height:26.45px;line-height:26.45px;font-size:15.21px">17</span><span class="kal-hari" style="position:absolute;left:213.28px;width:46.29px;top:293.63px;height:26.45px;line-height:26.45px;font-size:15.21px">18</span><span class="kal-hari" style="position:absolute;left:259.90px;width:46.29px;top:293.63px;height:26.45px;line-height:26.45px;font-size:15.21px">19</span><span class="kal-hari kal-hati" style="position:absolute;left:306.19px;width:46.29px;top:293.63px;height:26.45px;line-height:26.45px;font-size:15.21px"><svg width="35.71" height="33.07" viewBox="0 0 24 22" aria-hidden="true"><path fill="#3d5577" d="M12 21.4C5.4 16.4 1 12.6 1 7.9 1 4.4 3.7 1.6 7.1 1.6c2 0 3.8 1 4.9 2.6 1.1-1.6 2.9-2.6 4.9-2.6 3.4 0 6.1 2.8 6.1 6.3 0 4.7-4.4 8.5-11 13.5Z"/></svg><b>20</b></span><span class="kal-hari" style="position:absolute;left:22.15px;width:46.29px;top:349.34px;height:26.45px;line-height:26.45px;font-size:15.21px">21</span><span class="kal-hari" style="position:absolute;left:70.43px;width:46.29px;top:349.34px;height:26.45px;line-height:26.45px;font-size:15.21px">22</span><span class="kal-hari" style="position:absolute;left:118.05px;width:46.29px;top:349.34px;height:26.45px;line-height:26.45px;font-size:15.21px">23</span><span class="kal-hari" style="position:absolute;left:165.33px;width:46.29px;top:349.34px;height:26.45px;line-height:26.45px;font-size:15.21px">24</span><span class="kal-hari" style="position:absolute;left:213.28px;width:46.29px;top:349.34px;height:26.45px;line-height:26.45px;font-size:15.21px">25</span><span class="kal-hari" style="position:absolute;left:259.90px;width:46.29px;top:349.34px;height:26.45px;line-height:26.45px;font-size:15.21px">26</span><span class="kal-hari" style="position:absolute;left:306.19px;width:46.29px;top:349.34px;height:26.45px;line-height:26.45px;font-size:15.21px">27</span><span class="kal-hari" style="position:absolute;left:22.15px;width:46.29px;top:405.06px;height:26.45px;line-height:26.45px;font-size:15.21px">28</span><span class="kal-hari" style="position:absolute;left:70.43px;width:46.29px;top:405.06px;height:26.45px;line-height:26.45px;font-size:15.21px">29</span><span class="kal-hari" style="position:absolute;left:118.05px;width:46.29px;top:405.06px;height:26.45px;line-height:26.45px;font-size:15.21px">30</span><span class="kal-hari" style="position:absolute;left:165.33px;width:46.29px;top:405.06px;height:26.45px;line-height:26.45px;font-size:15.21px">31</span></div>
+<div class="t" style="left:154.18px;top:1704.98px;width:209.53px;height:43.71px;text-align:center;transform:scale(1.054190);transform-origin:0 0"><span style="font-size:36.459px;line-height:51.042px"><span style="font-family:'kad-snell','Apple Chancery',cursive;font-size:36.459px;line-height:51.042px;color:#3d5577;font-weight:400;font-style:normal">Counting Days</span></span></div>
+<div class="kupu-diam" style="left:92.06px;top:1662.93px;width:69.23px"><img src="assets/kad/5506999cf7a0.webp" alt=""></div>
+<div class="kupu-diam k2" style="left:373.62px;top:2046.13px;width:69.23px"><img src="assets/kad/5506999cf7a0.webp" alt=""></div>
+<div class="cd" id="countdown" style="left:143.47px;top:1827.82px;width:261.85px;height:130.92px"><div class="cd-num"><span><b id="cd-d">00</b>:<b id="cd-h">00</b>:<b id="cd-m">00</b>:<b id="cd-s">00</b></span></div><div class="cd-lab"><span>DAYS</span><span>HOURS</span><span>MINS</span><span>SECS</span></div></div>
+<div class="t" style="left:217.93px;top:159.70px;width:56.47px;height:99.87px;text-align:center"><span style="font-size:59.814px;line-height:29.907px"><span style="font-family:'kad-snell','Apple Chancery',cursive;font-size:59.814px;line-height:29.907px;color:#ffffff;font-weight:400;font-style:normal">E<br>Z</span></span></div>
+<div class="t" data-muat="96.5" style="left:274.03px;top:386.23px;width:109.70px;height:91.37px;text-align:center;transform:scale(1.367424);transform-origin:0 0"><span style="font-size:23.127px;line-height:32.377px"><span style="font-family:'kad-snell','Apple Chancery',cursive;font-size:23.127px;line-height:32.377px;color:#3d5577;font-weight:700;font-style:normal">Eusoff<br>&amp;<br>Zaitul</span></span></div>
+<div class="kupu-diam" style="left:425.05px;top:516.91px;width:69.23px"><img src="assets/kad/5506999cf7a0.webp" alt=""></div>
+<div class="im" style="left:40.00px;top:1041.49px;width:464.19px;height:656.33px"><img src="assets/kad/25a6247b275b.webp" style="left:-14.03px;top:0.00px;width:492.25px;height:656.33px" alt="" loading="lazy"></div>
+<div class="im" style="left:196.36px;top:1118.98px;width:158.59px;height:44.60px"><img src="assets/kad/edb4e950eb53.webp" style="left:0.00px;top:0.00px;width:158.59px;height:44.60px" alt="" loading="lazy"></div>
+<div class="im" style="left:91.40px;top:1092.45px;width:146.95px;height:183.63px"><img src="assets/kad/b1088a3b3d17.webp" style="left:-0.00px;top:0.00px;width:146.95px;height:183.63px" alt="" loading="lazy"></div>
+<div class="t" data-muat="250.0" style="left:151.75px;top:1253.58px;width:240.69px;height:99.07px;text-align:center"><span style="font-size:13.333px;line-height:22.605px"><span style="font-family:'kad-cormorant',Georgia,serif;font-size:13.333px;line-height:22.605px;color:#ffffff;font-weight:700;font-style:italic">Dengan </span><span style="font-family:'kad-cormorant',Georgia,serif;font-size:13.333px;line-height:22.605px;color:#ffffff;font-weight:700;font-style:italic">penuh kesyukuran ke hadrat Illahi, kami<br><br></span><span style="font-family:'kad-cormorant',Georgia,serif;font-size:13.333px;line-height:22.605px;color:#ffffff;font-weight:700;font-style:normal;text-transform:uppercase">Zainin Bin Shah Bahari<br>&amp;<br>Liza Aryani Binti Sinin</span></span></div>
+<div class="im" style="left:315.03px;top:1092.49px;width:146.95px;height:183.63px"><img src="assets/kad/b1088a3b3d17.webp" style="left:-0.00px;top:-0.00px;width:146.95px;height:183.63px" alt="" loading="lazy"></div>
+<div class="kupu-diam k2" style="left:377.68px;top:1055.14px;width:69.23px"><img src="assets/kad/5506999cf7a0.webp" alt=""></div>
+<div class="kupu-diam" style="left:97.60px;top:1056.15px;width:69.23px"><img src="assets/kad/5506999cf7a0.webp" alt=""></div>
+<div class="t" data-muat="242.1" style="left:100.84px;top:1442.91px;width:256.55px;height:123.31px;text-align:center;transform:scale(1.362849);transform-origin:0 0"><span style="font-size:23.440px;line-height:32.817px"><span style="font-family:'kad-citadel',cursive;font-size:23.440px;line-height:32.817px;color:#ffffff;font-weight:400;font-style:normal">Eusoff<br><br>Zaitul</span></span></div>
+<div class="t" style="left:128.58px;top:1628.50px;width:681.16px;height:37.68px;text-align:center;transform:scale(0.429125);transform-origin:0 0"><span style="font-size:31.624px;line-height:53.615px"><span style="font-family:'kad-cormorant',Georgia,serif;font-size:31.624px;line-height:53.615px;color:#ffffff;font-weight:700;font-style:italic">Semoga kehadiran tetamu dapat memberkati majlis</span></span></div>
+<div class="t" style="left:139.30px;top:1369.65px;width:240.69px;height:51.33px;text-align:center;transform:scale(1.103496);transform-origin:0 0"><span style="font-size:13.333px;line-height:22.605px"><span style="font-family:'kad-cormorant',Georgia,serif;font-size:13.333px;line-height:22.605px;color:#ffffff;font-weight:700;font-style:italic">dengan s</span><span style="font-family:'kad-cormorant',Georgia,serif;font-size:13.333px;line-height:22.605px;color:#ffffff;font-weight:700;font-style:italic">egala hormatnya menjemput<br>Dato/Datin/Tuan/Puan/Encik/Cik<br> serta</span><span style="font-family:'kad-cormorant',Georgia,serif;font-size:13.333px;line-height:22.605px;color:#ffffff;font-weight:700;font-style:italic"> pasangan Majlis Walimatul Urus putera kami.</span></span></div>
+<div class="t" data-muat="198.3" style="left:202.05px;top:640.58px;width:253.31px;height:39.36px;text-align:center;transform:scale(1.260814);transform-origin:0 0"><span style="font-size:33.189px;line-height:49.857px"><span style="font-family:'kad-bodoni',Didot,Georgia,serif;font-size:33.189px;line-height:49.857px;color:#3d5577;font-weight:400;font-style:italic">Mac</span></span></div>
+<div class="t" style="left:265.01px;top:688.51px;width:168.05px;height:156.77px;text-align:center"><span style="font-size:131.167px;line-height:229.542px"><span style="font-family:'kad-alexbrush',cursive;font-size:131.167px;line-height:229.542px;color:#3d5577;font-weight:400;font-style:normal">20</span></span></div>
+<div class="t" data-muat="334.6" style="left:231.59px;top:832.26px;width:350.95px;height:39.36px;text-align:center;transform:scale(0.747135);transform-origin:0 0"><span style="font-size:33.189px;line-height:49.857px"><span style="font-family:'kad-bodoni',Didot,Georgia,serif;font-size:33.189px;line-height:49.857px;color:#3d5577;font-weight:400;font-style:italic">11.30 am - 4.00 pm </span></span></div>
+<div class="t" data-muat="240.9" style="left:225.75px;top:882.53px;width:350.95px;height:39.36px;text-align:center;transform:scale(0.747135);transform-origin:0 0"><span style="font-size:33.189px;line-height:49.857px"><span style="font-family:'kad-bodoni',Didot,Georgia,serif;font-size:33.189px;line-height:49.857px;color:#3d5577;font-weight:400;font-style:italic">Asiana Grand Hall</span></span></div>
+<div class="im" style="left:64.18px;top:863.88px;width:214.73px;height:214.73px"><img src="assets/kad/49204cb38f93.webp" style="left:0.00px;top:0.00px;width:214.73px;height:214.73px" alt="" loading="lazy"></div>
+<div class="kupu-diam k2" style="left:64.18px;top:846.96px;width:69.23px"><img src="assets/kad/5506999cf7a0.webp" alt=""></div>
+<div class="t" data-muat="150.0" style="left:104.31px;top:953.99px;width:138.85px;height:48.12px;text-align:center"><span style="font-size:22.667px;line-height:22.619px"><span style="font-family:'kad-bodoni',Didot,Georgia,serif;font-size:22.667px;line-height:22.619px;color:#ffffff;font-weight:400;font-style:italic;letter-spacing:-0.0250em">#Tog</span><span style="font-family:'kad-bodoni',Didot,Georgia,serif;font-size:22.667px;line-height:22.619px;color:#ffffff;font-weight:400;font-style:italic;letter-spacing:-0.0250em">etherWith<br>EusoffZaitul</span></span></div>
+<div class="t" style="left:159.19px;top:1181.25px;width:229.02px;height:65.49px;text-align:center;transform:scale(1.006106);transform-origin:0 0"><span style="font-size:12.527px;line-height:18.818px"><span style="font-family:'kad-bodoni',Didot,Georgia,serif;font-size:12.527px;line-height:18.818px;color:#ffffff;font-weight:400;font-style:italic">Dengan izin Allah SWT yang</span><span style="font-family:'kad-bodoni',Didot,Georgia,serif;font-size:12.527px;line-height:18.818px;color:#ffffff;font-weight:400;font-style:italic"> Maha<br>Pengasih, menyatukan dua hati dalam satu<br>janji yang halal dan abadi<br></span></span></div>
+<div class="t" style="left:163.69px;top:1517.43px;width:230.42px;height:18.80px;text-align:center"><span style="font-size:12.515px;line-height:18.800px"><span style="font-family:'kad-bodoni',Didot,Georgia,serif;font-size:12.515px;line-height:18.800px;color:#ffffff;font-weight:400;font-style:italic">dan pilihan hatinya</span></span></div>
+</div>
+<div class="band" style="left:458.72px;top:2462.03px;width:526.34px;height:308.04px">
+<div class="im" style="left:40.00px;top:40.00px;width:446.34px;height:228.04px"><img src="assets/kad/436bb189d1e6.webp" style="left:-0.00px;top:-47.82px;width:446.34px;height:334.75px" alt="" loading="lazy"></div>
+<div class="t" id="rsvp-link" role="button" tabindex="0" style="left:143.07px;top:84.53px;width:122.70px;height:69.49px;text-align:center"><span style="font-size:58.147px;line-height:66.287px"><span style="font-family:'kad-snell','Apple Chancery',cursive;font-size:58.147px;line-height:66.287px;color:#faf7f2;font-weight:400;font-style:normal">Rsvp</span></span></div>
+<div class="t" style="left:125.68px;top:167.02px;width:167.89px;height:32.86px;text-align:center;transform:scale(1.042802);transform-origin:0 0"><span style="font-size:14.327px;line-height:17.525px"><span style="font-family:'kad-bodoni',Didot,Georgia,serif;font-size:14.327px;line-height:17.525px;color:#faf7f2;font-weight:400;font-style:italic">Sila sahkan kehadiran anda<br>sebelum tarikh majlis</span></span></div>
+</div>
+<div class="band" style="left:411.05px;top:2760.01px;width:618.08px;height:761.36px">
+<div class="im" style="left:67.50px;top:40.00px;width:477.80px;height:681.36px"><img src="assets/kad/b48754a2b809.webp" style="left:0.00px;top:0.00px;width:477.80px;height:681.36px" alt="" loading="lazy"></div>
+<div class="im" style="left:40.00px;top:44.19px;width:538.08px;height:646.34px"><img src="assets/kad/67f6350ddeb6.webp" style="left:0.00px;top:0.00px;width:538.08px;height:646.34px" alt="" loading="lazy"></div>
+<div class="im" style="left:120.31px;top:87.34px;width:386.91px;height:580.36px"><img src="assets/kad/c9a3740a15eb.webp" style="left:0.00px;top:0.00px;width:386.91px;height:580.36px" alt="" loading="lazy"></div>
+<div class="im" style="left:216.38px;top:224.77px;width:57.29px;height:40.03px"><img src="assets/kad/357f4fb76d60.webp" style="left:0.00px;top:0.00px;width:57.29px;height:40.03px" alt="" loading="lazy"></div>
+<div class="im" style="left:224.72px;top:299.84px;width:37.75px;height:65.04px"><img src="assets/kad/0bb422a89e41.webp" style="left:0.00px;top:0.00px;width:37.75px;height:65.04px" alt="" loading="lazy"></div>
+<div class="im" style="left:224.72px;top:479.42px;width:40.61px;height:55.69px"><img src="assets/kad/831760eb39c3.webp" style="left:-0.00px;top:0.00px;width:40.61px;height:55.69px" alt="" loading="lazy"></div>
+<div class="im" style="left:212.17px;top:569.61px;width:76.25px;height:50.32px"><img src="assets/kad/80df08b28243.webp" style="left:-0.00px;top:0.00px;width:76.25px;height:50.32px" alt="" loading="lazy"></div>
+<div class="t" style="left:216.64px;top:164.34px;width:108.96px;height:27.37px;text-align:center;transform:scale(1.696089);transform-origin:0 0"><span style="font-size:23.127px;line-height:32.377px"><span style="font-family:'kad-snell','Apple Chancery',cursive;font-size:23.127px;line-height:32.377px;color:#3d5577;font-weight:700;font-style:normal">Tentatives</span></span></div>
+<div class="t" data-muat="157.7" style="left:256.13px;top:257.77px;width:191.83px;height:277.07px;text-align:center;transform:scale(1.173377);transform-origin:0 0"><span style="font-size:14.667px;line-height:24.866px"><span style="font-family:'kad-cormorant',Georgia,serif;font-size:14.667px;line-height:24.866px;color:#3d5577;font-weight:700;font-style:italic">11.30 am<br>Ketibaan tetamu &amp; jamuan<br><br>12.30 pm<br>Ketibaan pengantin<br><br>1.00 pm<br>Bacaan doa<br><br>1.15 pm<br>Memotong kek &amp; sesi bergambar<br><br>4.00 pm<br>Majlis bersurai</span></span></div>
+</div>
+<div class="band" style="left:517.10px;top:3468.23px;width:390.45px;height:516.44px">
+<div class="im" style="left:40.00px;top:40.00px;width:310.45px;height:301.53px"><img src="assets/kad/cef23c957d03.webp" style="left:-0.00px;top:-0.00px;width:310.45px;height:301.53px" alt="" loading="lazy"></div>
+<div class="t" style="left:171.01px;top:140.46px;width:73.72px;height:25.71px;text-align:center;transform:scale(0.722316);transform-origin:0 0"><span style="font-size:21.820px;line-height:24.115px"><span style="font-family:'kad-bodoni',Didot,Georgia,serif;font-size:21.820px;line-height:24.115px;color:#3d5577;font-weight:400;font-style:italic">Hubungi</span></span></div>
+<div class="t" data-muat="235.4" style="left:128.61px;top:171.32px;width:186.37px;height:84.96px;text-align:center;transform:scale(0.722316);transform-origin:0 0"><span style="font-size:17.701px;line-height:17.473px"><span style="font-family:'kad-bodoni',Didot,Georgia,serif;font-size:17.701px;line-height:17.473px;color:#3d5577;font-weight:400;font-style:italic;letter-spacing:0.0190em">+60 13-505 2077<br>(En. Zainin)<br><br>+60 19-679 4624<br>(En. Azhar)</span></span></div>
+<div class="im" style="left:133.40px;top:261.14px;width:133.49px;height:215.30px"><img src="assets/kad/5634723fbafb.webp" style="left:0.00px;top:0.00px;width:133.49px;height:215.30px" alt="" loading="lazy"></div>
+</div>
+<div class="band" style="left:645.84px;top:3910.50px;width:148.49px;height:139.50px">
+<div class="im home-btn" id="btn-home" role="button" tabindex="0" aria-label="Kembali ke atas" style="left:40.00px;top:40.00px;width:68.49px;height:68.49px"><img src="assets/kad/94f933732184.webp" style="left:0.00px;top:0.00px;width:68.49px;height:68.49px" alt="" loading="lazy"></div>
+</div>
+</div>
+  </div>
+</div>
+
+<section class="rsvp" id="rsvp">
+  <div class="rsvp-card">
+    <h2 class="rsvp-title">Sahkan Kehadiran</h2>
+    <p class="rsvp-sub">Mohon sahkan kehadiran anda dan tinggalkan ucapan buat pengantin.</p>
+    <form id="rsvp-form" novalidate>
+      <label class="fl" for="r-nama">Nama</label>
+      <div class="ac-wrap">
+        <input class="fi" id="r-nama" type="text" placeholder="Nama anda"
+               autocomplete="off" role="combobox" aria-expanded="false"
+               aria-autocomplete="list" aria-controls="r-ac">
+        <ul class="ac" id="r-ac" role="listbox" hidden></ul>
+      </div>
+      <p class="fld-err" id="r-nama-err" role="alert" hidden></p>
+
+      <span class="fl">Kehadiran</span>
+      <div class="seg">
+        <label class="sg"><input type="radio" name="hadir" value="Hadir" checked><span>Hadir</span></label>
+        <label class="sg"><input type="radio" name="hadir" value="Tidak Hadir"><span>Tidak Hadir</span></label>
+      </div>
+
+      <div id="wrap-bil">
+        <label class="fl" for="r-bil">Bilangan Kehadiran</label>
+        <input class="fi" id="r-bil" type="number" min="1" max="50" value="1" inputmode="numeric">
+        <p class="pax-hint" id="r-pax-hint" hidden></p>
+      </div>
+
+      <label class="fl" for="r-ucapan">Ucapan</label>
+      <textarea class="fi ta" id="r-ucapan" maxlength="600" placeholder="Tulis ucapan dan doa anda di sini"></textarea>
+
+      <button class="sb" type="submit">Hantar RSVP &amp; Ucapan</button>
+    </form>
+    <p class="ok" id="rsvp-ok" data-ok="Terima kasih. RSVP dan ucapan anda telah berjaya dihantar."></p>
+  </div>
+
+  <h3 class="wishes-title">Ucapan Tetamu</h3>
+  <div id="wishes"><p class="wish-empty">Belum ada ucapan. Jadilah yang pertama.</p></div>
+
+  <footer class="credit">
+    <p>Designed with love by</p>
+    <p class="credit-name">Zaitul Akmal</p>
+  </footer>
+</section>
+
+<script>
+(function(){
+  "use strict";
+  var C = window.CONFIG;
+  var CW = 1366, CONTENT = 505.55;
+  var PUSAT = { 'stage-cover': 683.00, 'stage-main': 724.18 };
+  var $ = function(s){ return document.querySelector(s); };
+  function esc(s){ return String(s).replace(/[&<>"']/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+
+  /* ── skala kanvas mengikut lebar skrin (sama seperti kad Zaitul) ── */
+  function fit(){
+    var vw = document.documentElement.clientWidth || window.innerWidth;
+    var PAD = vw < 480 ? 0 : 14;
+    var k = vw >= CW ? 1 : Math.min(1, (vw - PAD * 2) / CONTENT);
+    ['stage-cover', 'stage-main'].forEach(function(id){
+      var st = document.getElementById(id);
+      if (!st) return;
+      var tx = vw / 2 - PUSAT[id] * k;      /* setiap halaman ada pusatnya sendiri */
+      st.style.transform = 'translateX(' + tx.toFixed(2) + 'px) scale(' + k + ')';
+      window.__k = k;
+      var h = parseFloat(st.dataset.h) * k, host = st.parentNode;
+      if (host.id === 'wrap-main') host.style.height = h + 'px';
+      else st.style.top = Math.max(0, ((host.clientHeight || window.innerHeight) - h) / 2).toFixed(2) + 'px';
+    });
+  }
+  fit();
+  window.addEventListener('resize', fit);
+  window.addEventListener('orientationchange', fit);
+
+  /* ── teks yang ditukar mesti muat dalam kotak asalnya ──
+     Diukur dengan offsetWidth (tidak terkesan oleh skala kanvas). */
+  function muatTeks(){
+    document.querySelectorAll('.t[data-muat]').forEach(function(t){
+      var sp = t.firstElementChild, had = parseFloat(t.getAttribute('data-muat'));
+      if (!sp || sp.offsetWidth <= had) return;
+      var r = had / sp.offsetWidth;
+      sp.querySelectorAll('span').forEach(function(s){
+        s.style.fontSize = (parseFloat(s.style.fontSize) * r).toFixed(3) + 'px';
+        s.style.lineHeight = (parseFloat(s.style.lineHeight) * r).toFixed(3) + 'px';
+      });
+    });
+  }
+  (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(muatTeks);
+
+  /* ── buka jemputan: tekan atau leret ke atas ── */
+  var cover = $('#cover'), dibuka = false;
+  function bukaUndangan(){
+    if (dibuka) return;
+    dibuka = true;
+    cover.classList.add('gone');
+    document.body.classList.remove('locked');
+    window.scrollTo(0, 0);
+    setTimeout(function(){ cover.style.display = 'none'; }, 1300);
+    setTimeout(dedahLapisan, 60);
+    bukaBunyi();                       // sentuhan ini yang membenarkan bunyi
+  }
+  cover.addEventListener('click', bukaUndangan);
+  cover.addEventListener('keydown', function(e){
+    if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); bukaUndangan(); }
+  });
+  var mulaY = null;
+  cover.addEventListener('touchstart', function(e){ mulaY = e.touches[0].clientY; }, { passive:true });
+  cover.addEventListener('touchmove', function(e){
+    if (mulaY !== null && mulaY - e.touches[0].clientY > 45){ mulaY = null; bukaUndangan(); }
+  }, { passive:true });
+  cover.addEventListener('wheel', function(e){ if (e.deltaY > 12) bukaUndangan(); }, { passive:true });
+
+  /* ── lapisan muncul semasa skrol ── */
+  var lapisan = Array.prototype.slice.call(document.querySelectorAll('.band'));
+  function dedahLapisan(){
+    if (!lapisan.length || !dibuka) return;
+    var bawah = window.innerHeight * 0.92;
+    for (var i = lapisan.length - 1; i >= 0; i--){
+      var el = lapisan[i], anak = el.children, atas = Infinity;
+      for (var j = 0; j < anak.length; j++){
+        var r = anak[j].getBoundingClientRect();
+        if (r.height || r.width) atas = Math.min(atas, r.top);
+      }
+      if (atas === Infinity) atas = el.getBoundingClientRect().top;
+      if (atas < bawah){
+        el.classList.add('in');
+        setTimeout(function(n){ return function(){ n.classList.add('siap'); }; }(el), 1300);
+        lapisan.splice(i, 1);
+      }
+    }
+  }
+  window.addEventListener('scroll', dedahLapisan, { passive:true });
+  window.addEventListener('resize', dedahLapisan);
+
+  /* ── ikon rumah, pautan Rsvp, butang Google Maps ── */
+  var home = document.getElementById('btn-home');
+  function keAtas(){ window.scrollTo({ top:0, behavior:'smooth' }); setTimeout(dedahLapisan, 400); }
+  if (home){
+    home.addEventListener('click', keAtas);
+    home.addEventListener('keydown', function(ev){
+      if (ev.key === 'Enter' || ev.key === ' '){ ev.preventDefault(); keAtas(); }
+    });
+  }
+  var rl = document.getElementById('rsvp-link');
+  if (rl) rl.addEventListener('click', function(){ $('#rsvp').scrollIntoView({ behavior:'smooth' }); });
+  var peta = document.getElementById('btn-peta');
+  if (peta){ if (C.peta) peta.href = C.peta; else peta.hidden = true; }
+
+  /* ── kiraan detik ── */
+  var target = new Date(C.tarikhMajlis).getTime();
+  function pad(n){ return String(n).padStart(2, '0'); }
+  function tick(){
+    var s = Math.max(0, Math.floor((target - Date.now()) / 1000)), e;
+    if ((e = $('#cd-d'))) e.textContent = pad(Math.floor(s / 86400));
+    if ((e = $('#cd-h'))) e.textContent = pad(Math.floor(s % 86400 / 3600));
+    if ((e = $('#cd-m'))) e.textContent = pad(Math.floor(s % 3600 / 60));
+    if ((e = $('#cd-s'))) e.textContent = pad(s % 60);
+  }
+  function fitCountdown(){   /* bilangan hari 3 digit mesti kekal dalam kotak */
+    var box = $('#countdown'), inner = box && box.querySelector('.cd-num > span');
+    if (!inner) return;
+    inner.parentNode.style.fontSize = '48px';
+    var w = inner.offsetWidth, avail = box.offsetWidth * 0.96;
+    if (w > avail) inner.parentNode.style.fontSize = (48 * avail / w).toFixed(2) + 'px';
+  }
+  tick(); fitCountdown(); setInterval(tick, 1000);
+
+  /* ── muzik: piring hitam "Tap to play" ──
+     Sama seperti kad Zaitul: pemain dimuat bisu semasa kad dibuka, bunyi
+     dibuka bila tetamu sampai ke hujung, atau bila piring ditekan. */
+  var yt = document.getElementById('yt-wrap'), VID = C.lagu || '';
+  var frame = null, sedia = false, berbunyi = false, giliran = [];
+  function ytPost(func, args){
+    if (frame && frame.contentWindow)
+      frame.contentWindow.postMessage(JSON.stringify({ event:'command', func:func, args:args || [] }), '*');
+  }
+  function siapSedia(){
+    if (sedia) return;
+    sedia = true;
+    while (giliran.length){ var c = giliran.shift(); ytPost(c[0], c[1]); }
+  }
+  function hantar(func, args){ if (sedia) ytPost(func, args); else giliran.push([func, args]); }
+  function spin(on){ if (yt) yt.classList.toggle('spinning', on); }
+  /* Sebarang mesej daripada pemain bermakna ia sudah hidup — lebih pantas
+     dan lebih tepat daripada menunggu jeda tetap. */
+  window.addEventListener('message', function(ev){
+    if (frame && ev.source === frame.contentWindow) siapSedia();
+  });
+  function sediakanPemain(){
+    if (frame || !VID) return;
+    frame = document.createElement('iframe');
+    frame.id = 'yt-frame'; frame.title = 'Muzik latar'; frame.allow = 'autoplay; encrypted-media';
+    frame.addEventListener('load', function(){
+      if (frame.contentWindow)
+        frame.contentWindow.postMessage(JSON.stringify({ event:'listening' }), '*');
+      setTimeout(siapSedia, 700);            /* sandaran kalau mesej tidak sampai */
+    });
+    frame.src = 'https://www.youtube.com/embed/' + encodeURIComponent(VID) +
+      '?enablejsapi=1&autoplay=1&mute=1&loop=1&playsinline=1&controls=0&modestbranding=1&playlist=' +
+      encodeURIComponent(VID);
+    document.body.appendChild(frame);
+  }
+  function bukaBunyi(){
+    if (berbunyi || !VID) return;
+    berbunyi = true; sediakanPemain();
+    hantar('unMute'); hantar('setVolume', [55]); hantar('playVideo'); spin(true);
+  }
+  function tutupBunyi(){ berbunyi = false; hantar('pauseVideo'); hantar('mute'); spin(false); }
+  if (yt) yt.addEventListener('click', function(){ berbunyi ? tutupBunyi() : bukaBunyi(); });
+  /* Muat pemain (bisu) seawal mungkin supaya lagu sudah ditimbal sebelum
+     tetamu membuka kad. Autoplay bisu sentiasa dibenarkan pelayar. */
+  if (document.readyState === 'complete') sediakanPemain();
+  else window.addEventListener('load', sediakanPemain);
+  document.addEventListener('pointerdown', sediakanPemain, { once:true, passive:true });
+  var autoDone = false;
+  function checkEnd(){
+    if (autoDone || !dibuka) return;
+    var doc = document.documentElement, y = window.scrollY || doc.scrollTop || 0;
+    if (y + window.innerHeight < doc.scrollHeight - 220) return;
+    autoDone = true;
+    window.removeEventListener('scroll', checkEnd);
+    bukaBunyi();
+    document.addEventListener('pointerdown', function(){
+      if (berbunyi){ hantar('unMute'); hantar('setVolume', [55]); hantar('playVideo'); }
+    }, { once:true });
+  }
+  window.addEventListener('scroll', checkEnd, { passive:true });
+
+  /* ── pangkalan data (Firestore REST — tiada SDK luar) ── */
+  var DB = C.rsvpDb || {};
+  function dbUrl(koleksi){
+    if (!DB.projectId || !DB.apiKey || !koleksi) return null;
+    return 'https://firestore.googleapis.com/v1/projects/' + DB.projectId +
+           '/databases/(default)/documents/' + koleksi + '?key=' + encodeURIComponent(DB.apiKey);
+  }
+  function tulis(koleksi, fields){
+    var url = dbUrl(koleksi);
+    if (!url) return Promise.reject(new Error('tiada-db'));
+    return fetch(url, { method:'POST', headers:{ 'Content-Type':'application/json' },
+                        body: JSON.stringify({ fields: fields }) })
+      .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); });
+  }
+  function lukisUcapan(senarai){
+    $('#wishes').innerHTML = senarai.length
+      ? senarai.map(function(u){
+          return '<div class="wish"><p>&ldquo;' + esc(u.teks) + '&rdquo;</p><b>&mdash; ' + esc(u.nama) + '</b>' +
+            (u.balasan ? '<div class="balas"><small>&#8617; Balasan pengantin</small><span>' + esc(u.balasan) +
+                         '</span></div>' : '') + '</div>';
+        }).join('')
+      : '<p class="wish-empty">Belum ada ucapan. Jadilah yang pertama.</p>';
+  }
+  function muatUcapan(){
+    var url = dbUrl(DB.ucapan);
+    if (!url) return;
+    fetch(url + '&pageSize=200')
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(d){
+        if (!d) return;
+        var a = (d.documents || []).map(function(doc){
+          var f = doc.fields || {};
+          return { nama:(f.nama || {}).stringValue || '', teks:(f.teks || {}).stringValue || '',
+                   masa:(f.masa || {}).stringValue || '', balasan:((f.balasan || {}).stringValue || '').trim() };
+        }).filter(function(u){ return u.teks; });
+        a.sort(function(x, y){ return (y.masa || '').localeCompare(x.masa || ''); });
+        lukisUcapan(a);
+      }).catch(function(){});
+  }
+  muatUcapan();
+
+  /* ── penapis senarai jemputan ── */
+  var TETAMU = (window.TETAMU || []).map(function(g){
+    return (typeof g === 'string') ? { nama:g, pax:0 } : { nama:g.nama, pax:g.pax || 0 };
+  }).filter(function(g){ return g.nama; });
+  var BERTAPIS = TETAMU.length > 0;
+  function norm(s){
+    s = String(s).toLowerCase();
+    if (s.normalize) s = s.normalize('NFD').replace(/[̀-ͯ]/g, '');
+    return s.replace(/[^a-z0-9 ]+/g, ' ').replace(/\s+/g, ' ').trim();
+  }
+  var INDEX = TETAMU.map(function(g){ return { g:g, k:norm(g.nama) }; });
+  var elNama = $('#r-nama'), elAc = $('#r-ac'), elErr = $('#r-nama-err');
+  var elBil = $('#r-bil'), elPax = $('#r-pax-hint'), pilihan = null;
+
+  function cariTepat(v){
+    var k = norm(v);
+    if (!k) return null;
+    for (var i = 0; i < INDEX.length; i++) if (INDEX[i].k === k) return INDEX[i].g;
+    return null;
+  }
+  function cadangan(v){
+    var k = norm(v), out = [];
+    if (k.length < 2) return out;
+    for (var i = 0; i < INDEX.length && out.length < 8; i++)
+      if (INDEX[i].k.indexOf(k) !== -1) out.push(INDEX[i].g);
+    return out;
+  }
+  function tutupAc(){ elAc.hidden = true; elAc.innerHTML = ''; elNama.setAttribute('aria-expanded', 'false'); }
+  function tunjukPax(g){
+    if (g && g.pax > 0){
+      elBil.max = g.pax;
+      if (+elBil.value > g.pax) elBil.value = g.pax;
+      elPax.textContent = 'Jemputan ini untuk ' + g.pax + ' orang.';
+      elPax.hidden = false;
+    } else { elBil.max = 50; elPax.hidden = true; }
+  }
+  function pilih(g){
+    pilihan = g; elNama.value = g.nama; elNama.classList.remove('err');
+    elErr.hidden = true; tunjukPax(g); tutupAc();
+  }
+  function lukisAc(list){
+    if (!list.length){ tutupAc(); return; }
+    elAc.innerHTML = '';
+    list.forEach(function(g){
+      var li = document.createElement('li');
+      li.textContent = g.nama; li.setAttribute('role', 'option');
+      li.addEventListener('mousedown', function(ev){ ev.preventDefault(); pilih(g); });
+      elAc.appendChild(li);
+    });
+    elAc.hidden = false; elNama.setAttribute('aria-expanded', 'true');
+  }
+  if (BERTAPIS){
+    elNama.setAttribute('placeholder', 'Taip nama anda seperti dalam jemputan');
+    elNama.addEventListener('input', function(){
+      pilihan = cariTepat(elNama.value);
+      elNama.classList.remove('err'); elErr.hidden = true;
+      tunjukPax(pilihan); lukisAc(cadangan(elNama.value));
+    });
+    elNama.addEventListener('blur', function(){ setTimeout(tutupAc, 120); });
+    elNama.addEventListener('keydown', function(ev){
+      if (ev.key === 'Escape') tutupAc();
+      if (ev.key === 'Enter' && !elAc.hidden){
+        var first = elAc.querySelector('li');
+        if (first){ ev.preventDefault(); first.dispatchEvent(new MouseEvent('mousedown')); }
+      }
+    });
+  }
+  function sahNama(){
+    var v = elNama.value.trim();
+    if (!BERTAPIS){
+      if (v) return true;
+      elErr.textContent = 'Sila isi nama anda.';
+    } else {
+      var g = pilihan || cariTepat(v);
+      if (g){ pilihan = g; return true; }
+      elErr.textContent = v
+        ? 'Nama ini tiada dalam senarai jemputan. Sila semak ejaan, atau hubungi keluarga pengantin.'
+        : 'Sila isi nama anda.';
+    }
+    elNama.classList.add('err'); elErr.hidden = false; elNama.focus();
+    return false;
+  }
+  document.querySelectorAll('input[name=hadir]').forEach(function(r){
+    r.addEventListener('change', function(){
+      $('#wrap-bil').style.display = (r.value === 'Hadir' && r.checked) ? '' : 'none';
+    });
+  });
+
+  var form = $('#rsvp-form'), btnHantar = form.querySelector('.sb');
+  var labelHantar = btnHantar.textContent, okBox = $('#rsvp-ok');
+  form.addEventListener('submit', function(ev){
+    ev.preventDefault();
+    if (!sahNama()) return;
+    var nama   = pilihan ? pilihan.nama : elNama.value.trim();   // guna ejaan rasmi
+    var hadir  = document.querySelector('input[name=hadir]:checked').value;
+    var bil    = parseInt(elBil.value, 10) || 1;
+    var ucapan = $('#r-ucapan').value.trim();
+    if (pilihan && pilihan.pax > 0 && bil > pilihan.pax) bil = pilihan.pax;
+    bil = Math.min(Math.max(bil, 1), 50);
+    if (hadir !== 'Hadir') bil = 0;
+    var masa = new Date().toISOString();
+
+    btnHantar.disabled = true; btnHantar.textContent = 'Menghantar…';
+    okBox.classList.remove('show', 'gagal');
+    tulis(DB.rsvp, {
+      nama:{ stringValue:nama }, kehadiran:{ stringValue:hadir },
+      bilangan:{ integerValue:String(bil) }, ucapan:{ stringValue:ucapan }, masa:{ stringValue:masa }
+    }).then(function(){
+      if (ucapan){
+        tulis(DB.ucapan, { nama:{ stringValue:nama }, teks:{ stringValue:ucapan },
+                           masa:{ stringValue:masa } }).then(muatUcapan, muatUcapan);
+      }
+      okBox.textContent = okBox.getAttribute('data-ok');
+      okBox.classList.add('show');
+      form.reset(); pilihan = null; elPax.hidden = true; elBil.max = 50;
+      $('#wrap-bil').style.display = '';
+      var wa = (C.waRsvp || '').replace(/\D/g, '');
+      if (wa){
+        var msg = ['*RSVP — Walimatul Urus Eusoff*', 'Nama: ' + nama, 'Kehadiran: ' + hadir]
+          .concat(hadir === 'Hadir' ? ['Bilangan: ' + bil + ' orang'] : [])
+          .concat(ucapan ? ['Ucapan: ' + ucapan] : []).join('\n');
+        window.open('https://wa.me/' + wa + '?text=' + encodeURIComponent(msg), '_blank', 'noopener');
+      }
+    }).catch(function(){
+      /* jangan beritahu tetamu ia berjaya kalau sebenarnya gagal */
+      okBox.textContent = 'Maaf, RSVP anda tidak dapat dihantar. Sila cuba lagi, atau hubungi keluarga pengantin.';
+      okBox.classList.add('show', 'gagal');
+    }).then(function(){ btnHantar.disabled = false; btnHantar.textContent = labelHantar; });
+  });
+})();
+</script>
+</body>
+</html>
