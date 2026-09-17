@@ -1,7 +1,7 @@
 # Kontrak projek — jemputan-eusoff
 
 Kad jemputan digital **Walimatul Urus sebelah Eusoff** (pihak lelaki).
-Pasangan kepada repo `jemputan-eusoff-zaitul` (kad sebelah Zaitul, maroon).
+Kad sebelah Zaitul ada dalam repo dan projek Firebase lain (`jemputan-eusoff-zaitul`). Tiada perkongsian.
 
 `CLAUDE.md` ialah symlink ke fail ini.
 
@@ -11,7 +11,9 @@ Pasangan kepada repo `jemputan-eusoff-zaitul` (kad sebelah Zaitul, maroon).
 |---|---|---|
 | 11 Sep 2026 | Repo | Repo berasingan `jemputan-eusoff` |
 | 11 Sep 2026 | Teknologi | HTML/CSS/JS biasa + skrip bina Python. Tiada framework |
-| 11 Sep 2026 | Pangkalan data | Projek Firebase `fir-demo-b08a9`, koleksi `rsvp_eusoff` + `ucapan_eusoff` |
+| 11 Sep 2026 | Pangkalan data | Koleksi `rsvp_eusoff` + `ucapan_eusoff` |
+| 17 Sep 2026 | Firebase | Projek sendiri, **tidak digabung dengan kad Zaitul**: `project-50fca4c2-1177-4292-916` ("Majlis Eusoff"; projek kosong sedia ada kerana kuota projek Google penuh) |
+| 17 Sep 2026 | GitHub | https://github.com/zaitulakmal/jemputan-eusoff (public). Fail `senarai-*.html` tidak di-commit (link rahsia) |
 | 11 Sep 2026 | Senarai RSVP | Repo ini ada `senarai.html` + `tools/laporan.py` sendiri |
 | 11 Sep 2026 | Jenis majlis | Walimatul Urus Putera |
 | 11 Sep 2026 | Warna | Nude + biru, ikut warna dewan (Asiana Grand Hall) |
@@ -45,8 +47,8 @@ Setiap penggantian mesti wujud dalam templat — kalau tidak, bina gagal dengan 
 
 ## Peraturan yang mesti dipatuhi
 
-1. **Firestore rules TIDAK di-deploy dari repo ini.** Satu projek, satu fail rules:
-   `jemputan-eusoff-zaitul/firestore.rules`. `firebase.json` di sini hanya `hosting`.
+1. **`firestore.rules` repo ini ialah satu-satunya sumber peraturan projek `project-50fca4c2-1177-4292-916`.**
+   Jangan deploy apa-apa dari repo ini ke projek kad Zaitul (`fir-demo-b08a9`).
 2. **Gambar peribadi pasangan asal templat (Ain & Aiman) tidak boleh dimuat turun
    atau digunakan.** `tools/ambil.py` mengecualikan media `PERIBADI`.
 3. Kumpulan Canva (`H`) diratakan ke koordinat mutlak — **jangan bungkus elemen
@@ -61,11 +63,12 @@ Setiap penggantian mesti wujud dalam templat — kalau tidak, bina gagal dengan 
 
 ## Status live
 
-- Link tetamu (17 Sep 2026): https://majlis-eusoff-zaitul.web.app (site `majlis-eusoff-zaitul`).
+- Link tetamu (17 Sep 2026): https://majlis-eusoff.web.app (site `majlis-eusoff`, projek `project-50fca4c2-1177-4292-916`).
+  Link lama https://majlis-eusoff-zaitul.web.app masih dalam projek Zaitul — lihat Open questions.
   Laman lama https://jemputan-eusoff.web.app (site `jemputan-eusoff`) masih kad taman 11 Sep.
 - Masih menghidangkan **versi taman**. Klon Ain & Aiman belum dinaikkan ke live.
-- Deploy: `firebase deploy --only hosting --project fir-demo-b08a9`
-- Rules `rsvp_eusoff`/`ucapan_eusoff` sudah di-deploy dari repo Zaitul dan diuji.
+- Deploy: `firebase deploy` (hosting + firestore rules, projek dari `.firebaserc`). Pastikan fail senarai rahsia ada di mesin.
+- Rules `rsvp_eusoff`/`ucapan_eusoff` di-deploy dari repo ini (17 Sep 2026).
 - `/senarai-<kod rahsia>` ada **Muat turun PDF** (17 Sep 2026): laporan cetak A4 tanpa pustaka luar.
   Hanya ada di pratonton sehingga laman live di-deploy. `MAJLIS` dalam `senarai.html`
   mesti diselaraskan kalau tarikh/tempat berubah.
@@ -93,12 +96,12 @@ Setiap penggantian mesti wujud dalam templat — kalau tidak, bina gagal dengan 
   pengantin · 1.00 pm Bacaan doa · 1.15 pm Memotong kek & sesi bergambar · 4.00 pm Majlis bersurai.
   Kad tarikh & laporan PDF: 11.30 am - 4.00 pm. Ikon dijajarkan dengan `GESER_ANAK_Y` (diukur).
 - Pin Google Maps tepat (sekarang pautan carian), senarai tetamu.
-- Repo GitHub: awam atau peribadi? Belum dicipta. Belum di-commit.
+- Link lama `majlis-eusoff-zaitul.web.app` & `jemputan-eusoff.web.app` serta koleksi/rules Eusoff dalam projek `fir-demo-b08a9`: lencong, padam atau biar?
 
 ## Akses senarai RSVP (17 Sep 2026)
 
 Keputusan Zaitul, selepas diberitahu risikonya: senarai terbuka kepada **sesiapa**, tanpa log masuk
-(baca, sunting, padam, balas). Link: https://majlis-eusoff-zaitul.web.app/senarai-<kod rahsia> (tidak disimpan dalam repo)
+(baca, sunting, padam, balas). Link: https://majlis-eusoff.web.app/senarai-<kod rahsia> (tidak disimpan dalam repo)
 - Alamat rawak supaya tetamu tidak boleh meneka dari link kad — tetapi data `rsvp_eusoff` /
   `ucapan_eusoff` tetap boleh dibaca terus melalui API (kunci ada dalam kod kad).
 - Rules masih menguatkuasakan: masa jawab dikunci, data mesti sah, ucapan baharu tidak boleh dicipta

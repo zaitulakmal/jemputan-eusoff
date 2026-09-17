@@ -13,7 +13,7 @@ from collections import OrderedDict
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 KAD = os.path.join(HERE, "..", "index.html")
-PROJECT = "fir-demo-b08a9"
+PROJECT = "project-50fca4c2-1177-4292-916"
 KOLEKSI = "rsvp_eusoff"          # kad Zaitul guna "rsvp"
 
 

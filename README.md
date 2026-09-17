@@ -3,7 +3,7 @@
 Kad sebelah pengantin lelaki. Klon tepat templat Canva **Ain & Aiman**
 (jemputku), diwarnakan semula **nude + biru** ikut warna dewan.
 
-**Link tetamu:** <https://majlis-eusoff-zaitul.web.app> · senarai RSVP: `/senarai-<kod rahsia>`
+**Link tetamu:** <https://majlis-eusoff.web.app> · senarai RSVP: `/senarai-<kod rahsia>`
 
 ```
 index.html        kad (DIJANA — jangan sunting terus)
@@ -28,7 +28,7 @@ Selepas menukar apa-apa:
 
 ```
 python3 tools/bina.py
-firebase deploy --only hosting --project fir-demo-b08a9
+firebase deploy            # hosting + firestore.rules
 ```
 
 Kali pertama di mesin baharu, ambil data templat dahulu:
@@ -53,8 +53,8 @@ Kosongkan senarai kalau nak sesiapa sahaja boleh RSVP.
 
 ## Data RSVP
 
-Projek Firebase sama dengan kad Zaitul (`fir-demo-b08a9`), koleksi berasingan:
-`rsvp_eusoff` (tertutup) dan `ucapan_eusoff` (dipaparkan pada kad).
+Projek Firebase sendiri `project-50fca4c2-1177-4292-916` ("Majlis Eusoff"), tidak dikongsi
+dengan kad Zaitul. Koleksi: `rsvp_eusoff` dan `ucapan_eusoff` (dipaparkan pada kad).
 
 ```
 python3 tools/laporan.py                  # ringkasan + senarai
@@ -72,8 +72,7 @@ tidak hadir, belum jawab), jadual bernombor bagi setiap kumpulan, dan ucapan.
 Tiada pustaka luar. Butiran majlis dalam laporan ada dalam `MAJLIS` di
 `senarai.html` — mesti sama dengan kad.
 
-**Peraturan Firestore diurus dalam repo `jemputan-eusoff-zaitul`**, bukan di
-sini. Lihat `AGENTS.md`.
+**Peraturan Firestore** ada dalam `firestore.rules` repo ini. Lihat `AGENTS.md`.
 
 ## Warna
 
