@@ -76,11 +76,14 @@ SEMBUNYI_ATURCARA = "1:16"
 # Kad aturcara templat direka untuk 5 acara dan 4 ikon. Satu ikon bagi setiap
 # acara (ikut urutan); ikon selebihnya disembunyikan.
 TEKS_ATURCARA = "1:16.8"
-# ikon bagi setiap acara ikut indeks; acara tanpa ikon (bacaan doa) tiada entri
+# ikon bagi setiap acara ikut indeks
 IKON_ATURCARA = {0: "1:16.3",                  # kereta   -> ketibaan tetamu
                  1: "1:16.4",                  # pasangan -> ketibaan pengantin
                  3: "1:16.5",                  # kek      -> memotong kek
                  4: "1:16.6"}                  # merpati  -> bersurai
+# Templat hanya ada 4 ikon. Ikon tambahan (SVG lukisan sendiri, gaya garis sama)
+# diletak di tengah antara dua ikon templat: (fail, ikon atas, ikon bawah, lebar px kanvas).
+IKON_TAMBAHAN = [("tools/ikon/doa.svg", "1:16.4", "1:16.5", 44.0)]   # bacaan doa (17 Sep 2026)
 IKON_SEMUA = ["1:16.3", "1:16.4", "1:16.5", "1:16.6"]
 BARIS_KOSONG_ATURCARA = 1                      # jarak antara acara (sama dengan templat)
 # teks yang diganti keseluruhannya (bukan sebahagian) — dijana dalam main()
@@ -403,6 +406,21 @@ def render_kupu(x, y, w, h, out):
                f'<img src="assets/kad/{nama}" alt=""></div>')
 
 
+def render_ikon_tambahan(fail, atas, bawah, lebar, out):
+    """Ikon SVG sendiri, berpusat di titik tengah antara pusat dua ikon templat."""
+    raw = open(os.path.join(ROOT, fail), "rb").read()
+    nama = hashlib.md5(raw).hexdigest()[:12] + ".svg"
+    with open(os.path.join(OUTA, nama), "wb") as fh:
+        fh.write(raw)
+    m = re.search(r'viewBox="0 0 ([\d.]+) ([\d.]+)"', raw.decode())
+    tinggi = lebar * float(m.group(2)) / float(m.group(1))
+    px = (atas[0] + atas[2] / 2 + bawah[0] + bawah[2] / 2) / 2
+    py = (atas[1] + atas[3] / 2 + bawah[1] + bawah[3] / 2) / 2
+    out.append(f'<div class="im" style="left:{px - lebar / 2:.2f}px;top:{py - tinggi / 2:.2f}px;'
+               f'width:{lebar:.2f}px;height:{tinggi:.2f}px"><img src="assets/kad/{nama}" '
+               f'style="left:0px;top:0px;width:{lebar:.2f}px;height:{tinggi:.2f}px" alt="" loading="lazy"></div>')
+
+
 def render_imej(e, laluan, x, y, k, out):
     a = e.get("a") or {}
     b = a.get("B")
@@ -576,10 +594,15 @@ def render(e, laluan, x, y, k, out):
         render_kiraan(x, y, e["D"] * k, e["C"] * k, out)
     elif t == "H":
         kk = k * (e["D"] / e["b"] if e.get("b") else 1.0)
+        kotak = {}
         for i, c in enumerate(e.get("c", [])):
             anak = f"{laluan}.{i}"
-            render(c, anak, x + c.get("B", 0) * kk,
-                   y + c.get("A", 0) * kk + GESER_ANAK_Y.get(anak, 0.0), kk, out)
+            cx, cy = x + c.get("B", 0) * kk, y + c.get("A", 0) * kk + GESER_ANAK_Y.get(anak, 0.0)
+            kotak[anak] = (cx, cy, c.get("D", 0) * kk, c.get("C", 0) * kk)
+            render(c, anak, cx, cy, kk, out)
+        for fail, atas, bawah, lebar in IKON_TAMBAHAN:
+            if atas in kotak and bawah in kotak:
+                render_ikon_tambahan(fail, kotak[atas], kotak[bawah], lebar, out)
     elif t == "K":
         render_teks(e, laluan, x, y, k, out)
     elif t == "I":

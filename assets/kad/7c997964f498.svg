@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 120" fill="none" stroke="#4a6285" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Ikon "Bacaan doa": dua tangan menadah, gaya garis ikon templat. -->
+  <defs>
+    <g id="tangan">
+      <!-- tangan kiri tetamu (di kanan gambar): ibu jari di sisi luar -->
+      <path d="M8 100 C8 90 7 80 5 70 C3 60 3 48 4 38
+               C4 33 10 33 10 38 C10 30 16 29 16 35 C17 29 23 29 23 35
+               C24 31 29 32 29 37 L29 62
+               C31 57 35 52 38 50 C41 48 43 51 41 54 C37 61 34 70 31 78
+               C30 86 29 93 28 100"/>
+      <path d="M10 38 L10.5 58 M16 35 L16.5 57 M23 35 L23 58" stroke-width="1.1"/>
+      <path d="M13 80 C17 83 22 83 26 79" stroke-width="1"/>
+      <path d="M6 100 L30 100 L30 110 L6 110 Z"/>
+    </g>
+  </defs>
+  <use href="#tangan" transform="translate(52 4) rotate(-6 18 105)"/>
+  <use href="#tangan" transform="translate(48 4) scale(-1 1) rotate(-6 18 105)"/>
+</svg>
