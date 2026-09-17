@@ -41,8 +41,8 @@ GANTI = {
     "1:20":   [("11.00 am - 4.00 pm", "11.30 am - 4.00 pm")],
     "1:21":   [("Dataran Gangsa", "Asiana Grand Hall")],
     "1:22.2": [("Ainman", "EusoffZaitul")],
-    "1:17.3": [("Adi Sazlizan bin Saklan", "Zainin Bin Shah Bahari"),
-               ("Norzalina binti Zainal", "Liza Aryani Binti Sinin")],
+    # nama bapa sahaja (keputusan Zaitul 17 Sep 2026)
+    "1:17.3": [("Adi Sazlizan bin Saklan\n&\nNorzalina binti Zainal", "Zainin Bin Shah Bahari")],
     "1:17.9": [("majlis perkahwinan puteri kami.", "Majlis Walimatul Urus putera kami.")],
     # nama penuh pengantin belum diberi — nama pendek dahulu, lelaki dahulu
     "1:17.7": [("Nur Ain binti Adi Sazlizan", "Eusoff"),
