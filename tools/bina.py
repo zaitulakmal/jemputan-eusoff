@@ -63,7 +63,12 @@ TEPI = 20          # ruang (px kanvas) di kiri & kanan kandungan pada telefon
 # Pelarasan halus kedudukan (px kanvas), diukur daripada render sebenar.
 # Nama pengantin kita jauh lebih pendek daripada nama dalam templat, jadi
 # "dan pilihan hatinya" tidak lagi jatuh di tengah antara dua nama.
-GESER_Y = {"1:24": 19.3}
+GESER_Y = {"1:24": 24.3}
+# Nama pengantin (1:17.7) dan "dan pilihan hatinya" (1:24): nama pendek kita
+# dibesarkan, dan ketiga-tiga baris dipusatkan tepat (17 Sep 2026, diukur dari render).
+SKALA_FON = {"1:17.7": 1.25}
+GESER_X = {"1:24": -5.6}
+GESER_ANAK_X = {"1:17.7": -7.4}
 
 # Aturcara belum diberi -> kad "Tentatives" (kumpulan 1:16) disembunyikan dan
 # segala di bawahnya dinaikkan ke tempatnya.
@@ -91,7 +96,8 @@ GANTI_PENUH = {}
 # geseran menegak (px kanvas) bagi elemen dalam kumpulan, diukur dari render
 # Diukur 17 Sep 2026: teks dipusatkan dalam ruang bawah tajuk "Tentatives";
 # setiap ikon dijajarkan dengan titik tengah acaranya.
-GESER_ANAK_Y = {"1:16.8": 17.0,                          # 5 acara melimpah kotak asal; turun ke bawah tajuk
+GESER_ANAK_Y = {"1:17.7": 6.5,                            # nama pengantin -> jarak atas = bawah
+                "1:16.8": 17.0,                          # 5 acara melimpah kotak asal; turun ke bawah tajuk
                 "1:16.3": -16.0, "1:16.4": -15.8,        # ikon -> tengah acara (diukur 17 Sep 2026)
                 "1:16.5": 63.9, "1:16.6": 63.4}
 # Renda kad aturcara (451..989) lebih lebar daripada kandungan lain. Kalau
@@ -357,6 +363,7 @@ def render_teks(e, laluan, x, y, k, out):
         saiz_lepas = saiz
         lead = float(st.get("leading") or pertama.get("leading") or 1400) / 1000
         lh = saiz * lead * METRIK.get(fid, 1.0)
+        saiz, lh = saiz * SKALA_FON.get(laluan, 1.0), lh * SKALA_FON.get(laluan, 1.0)
         italik = st.get("font-style") == "italic"
         tebal = st.get("font-weight") == "bold"
         # Dalam templat, uppercase hanya kelihatan pada bahagian tegak (nama
@@ -597,7 +604,8 @@ def render(e, laluan, x, y, k, out):
         kotak = {}
         for i, c in enumerate(e.get("c", [])):
             anak = f"{laluan}.{i}"
-            cx, cy = x + c.get("B", 0) * kk, y + c.get("A", 0) * kk + GESER_ANAK_Y.get(anak, 0.0)
+            cx = x + c.get("B", 0) * kk + GESER_ANAK_X.get(anak, 0.0)
+            cy = y + c.get("A", 0) * kk + GESER_ANAK_Y.get(anak, 0.0)
             kotak[anak] = (cx, cy, c.get("D", 0) * kk, c.get("C", 0) * kk)
             render(c, anak, cx, cy, kk, out)
         for fail, atas, bawah, lebar in IKON_TAMBAHAN:
@@ -706,6 +714,9 @@ def main():
         d = GESER_Y.get(f"1:{i}")
         if d and isinstance(e.get("A"), (int, float)):
             e["A"] += d
+        d = GESER_X.get(f"1:{i}")
+        if d and isinstance(e.get("B"), (int, float)):
+            e["B"] += d
 
     # Setiap halaman dipusatkan pada hiasannya sendiri (muka depan ~683,
     # halaman utama ~724 — seperti Canva). Kotak teks tidak dikira: kotak
