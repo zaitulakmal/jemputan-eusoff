@@ -1,0 +1,48 @@
+{
+  "hosting": {
+    "site": "majlis-eusoff-zaitul",
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      ".firebaserc",
+      "**/.*",
+      "**/node_modules/**",
+      "README.md",
+      "AGENTS.md",
+      "CLAUDE.md",
+      "versi-taman.html",
+      "assets/fonts/**",
+      "assets/gambar/**",
+      "assets/taman-*.svg",
+      "assets/ranting.svg",
+      "tools/**"
+    ],
+    "headers": [
+      {
+        "source": "assets/**",
+        "headers": [
+          { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+        ]
+      },
+      {
+        "source": "/",
+        "headers": [
+          { "key": "Cache-Control", "value": "no-cache, must-revalidate" }
+        ]
+      },
+      {
+        "source": "**/*.html",
+        "headers": [
+          { "key": "Cache-Control", "value": "no-cache, must-revalidate" }
+        ]
+      },
+      {
+        "source": "/senarai-*",
+        "headers": [
+          { "key": "Cache-Control", "value": "no-cache, must-revalidate" }
+        ]
+      }
+    ],
+    "cleanUrls": true
+  }
+}

@@ -1,0 +1,906 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Walimatul Urus · Eusoff &amp; Zaitul</title>
+<meta name="theme-color" content="#efe4da">
+<!-- Safari iOS menukar nombor telefon jadi pautan biru secara automatik -->
+<meta name="format-detection" content="telephone=no,date=no,address=no,email=no">
+<meta property="og:title" content="Walimatul Urus · Eusoff &amp; Zaitul">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:,">
+<link rel="preload" href="assets/fonts/cormorant-italic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/jost.woff2" as="font" type="font/woff2" crossorigin>
+
+<script>
+/* ═══ TUKAR MAKLUMAT DI SINI ═══
+   Medan yang dibiarkan kosong ("") dipaparkan sebagai ( … ) pada kad,
+   supaya mudah nampak apa yang belum diisi. */
+window.CONFIG = {
+  lelaki:    "Eusoff",
+  perempuan: "Zaitul",
+
+  penjemput: "Zainin Bin Shah Bahari\n&\nLiza Aryani Binti Sinin",   // guna \n untuk baris baharu
+
+  tarikhMajlis: "2027-03-20T08:00:00+08:00",  // kiraan detik & tarikh dipapar dijana daripada ini
+  masa:    "11.30 pagi – 4.00 petang",
+  tempat:  "Asiana Grand Hall Petaling Jaya",
+  alamat:  "Tingkat 17,\nMenara PKNS Petaling Jaya,\n17, Jalan Yong Shook Lin, Seksyen 7,\n46050 Petaling Jaya, Selangor",
+  // carian nama tempat; ganti dengan pautan pin tepat kalau ada
+  peta:    "https://www.google.com/maps/search/?api=1&query=Asiana+Grand+Hall+Menara+PKNS+Petaling+Jaya",
+
+  aturcara: [
+    // { masa: "11.00 pagi", acara: "Ketibaan tetamu & jamuan" },
+  ],
+
+  hubungi: [
+    { nama: "En. Zainin", telefon: "+60 13-505 2077" },
+    { nama: "En. Azhar",  telefon: "+60 19-679 4624" },
+  ],
+
+  lagu:   "8_E_IKKnjeY", // ID video YouTube (sama dengan kad Zaitul); kosong = tiada butang muzik
+  waRsvp: "",           // biar kosong; isi kalau nak RSVP masuk WhatsApp juga
+
+  /* Pangkalan data sama dengan kad Zaitul, tetapi koleksi berasingan.
+     Peraturan keselamatan diurus dalam repo jemputan-eusoff-zaitul. */
+  rsvpDb: {
+    projectId: "fir-demo-b08a9",
+    apiKey:    "AIzaSyC2idlHM9rhMMKxc7NpCNDNOP_NMApQjcc",
+    rsvp:      "rsvp_eusoff",
+    ucapan:    "ucapan_eusoff"
+  },
+
+  /* Letak fail dalam assets/gambar/ dan senaraikan di sini.
+     Senarai kosong -> bahagian galeri disembunyikan. */
+  gambar: [
+    // "assets/gambar/1.jpg",
+  ]
+};
+
+/* Senarai jemputan. Hanya nama dalam senarai ini boleh hantar RSVP.
+   Biarkan kosong kalau nak sesiapa sahaja boleh RSVP.
+     "Ahmad bin Ali"                    -> tiada had orang
+     { nama: "Ahmad bin Ali", pax: 2 }  -> maksimum 2 orang
+   senarai.html dan tools/laporan.py membaca blok ini terus. */
+window.TETAMU = [
+  // { nama: "Ahmad bin Ali", pax: 2 },
+  // "Siti binti Osman",
+];
+</script>
+
+<style>
+@font-face{ font-family:'Cormorant'; font-style:normal; font-weight:300 500; font-display:swap;
+  src:url('assets/fonts/cormorant.woff2') format('woff2'); }
+@font-face{ font-family:'Cormorant'; font-style:italic; font-weight:300 500; font-display:swap;
+  src:url('assets/fonts/cormorant-italic.woff2') format('woff2'); }
+@font-face{ font-family:'Jost'; font-style:normal; font-weight:300 500; font-display:swap;
+  src:url('assets/fonts/jost.woff2') format('woff2'); }
+
+:root{
+  --serif:'Cormorant','Cormorant Garamond',Georgia,serif;
+  --sans:'Jost','Helvetica Neue',Arial,sans-serif;
+  --ink:#262f3f;
+  --utama:#3d5577;
+  --lembut:#667a95;
+  --kabur:#5e6778;
+  --garis:rgba(61,85,119,.16);
+  --kaca:rgba(255,255,255,.42);
+  --kaca-tepi:rgba(255,255,255,.7);
+  --latar:#efe4da;
+}
+*,*::before,*::after{ box-sizing:border-box; }
+html{ -webkit-text-size-adjust:100%; }
+body{
+  margin:0; background:var(--latar); color:var(--ink);
+  font-family:var(--serif); font-size:19px; line-height:1.55;
+  -webkit-tap-highlight-color:transparent;
+  -webkit-font-smoothing:antialiased;
+}
+body.locked{ overflow:hidden; }
+[hidden]{ display:none !important; }
+a{ color:inherit; }
+
+/* ── taman: satu lapisan tetap di belakang segala-galanya ──
+   Daun di belakang panel kaca menjadi kabur, itulah kesan kacanya.
+   Lapisan ini sebesar skrin sahaja (bukan sepanjang halaman) —
+   pengajaran daripada kad Zaitul yang terbunuh di Safari iOS. */
+.taman{
+  position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none;
+  background:
+    radial-gradient(60% 45% at 78% 18%, rgba(255,255,255,.75), transparent 70%),
+    radial-gradient(55% 45% at 15% 85%, rgba(178,194,216,.6), transparent 70%),
+    linear-gradient(165deg, #f8f2ec 0%, #efe4da 45%, #e2d0c1 100%);
+}
+.taman img{ position:absolute; display:block; height:auto; max-width:none; }
+.taman .dekat{ width:clamp(250px, 64vw, 640px); }
+.taman .kiri { left:-4%; top:-3%; transform-origin:0 0; }
+.taman .kanan{ right:-4%; bottom:-3%; transform-origin:100% 100%; }
+.taman .jauh{ width:clamp(230px, 56vw, 560px); opacity:.5; filter:blur(5px); }
+.taman .jauh-1{ right:-10%; top:-6%; transform:scaleX(-1); }
+.taman .jauh-2{ left:-10%; bottom:-6%; transform:scaleX(-1); }
+@media (prefers-reduced-motion: no-preference){
+  .taman .kiri { animation:goyang 9s ease-in-out infinite alternate; }
+  .taman .kanan{ animation:goyang 11s ease-in-out -4s infinite alternate; }
+}
+@keyframes goyang{ from{ transform:rotate(-.8deg); } to{ transform:rotate(1.2deg); } }
+
+/* ── panel kaca ── */
+.kaca{
+  position:relative;
+  background:var(--kaca);
+  -webkit-backdrop-filter:blur(16px) saturate(1.35);
+  backdrop-filter:blur(16px) saturate(1.35);
+  border:1px solid var(--kaca-tepi);
+  border-radius:24px;
+  box-shadow:0 10px 36px rgba(45,58,82,.09), inset 0 1px 0 rgba(255,255,255,.8);
+}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .kaca{ background:rgba(252,248,244,.86); }
+}
+
+/* ── tipografi ── */
+.label{
+  font-family:var(--sans); font-weight:400; font-size:11.5px;
+  letter-spacing:.32em; text-transform:uppercase; color:var(--lembut);
+  margin:0; padding-left:.32em;       /* imbangi jarak huruf terakhir */
+}
+.nama{
+  font-family:var(--serif); font-style:italic; font-weight:300;
+  color:var(--utama); line-height:1; margin:0;
+}
+.nama span{ display:block; }
+.nama .dan{ font-size:.42em; margin:.3em 0 .35em; color:var(--lembut); font-style:normal; }
+h2{
+  font-family:var(--serif); font-style:italic; font-weight:300; font-size:34px;
+  color:var(--utama); margin:6px 0 20px; line-height:1.15;
+}
+.kosong{ color:#9a9087; font-style:italic; }
+.hiasan{ display:block; width:108px; height:auto; margin:0 auto 14px; opacity:.9; }
+
+/* ── muka depan ── */
+.cover{
+  position:fixed; inset:0; z-index:30; display:flex; align-items:center;
+  justify-content:center; padding:24px; cursor:pointer;
+  transition:opacity 1.1s ease, transform 1.1s cubic-bezier(.2,.7,.2,1);
+}
+.cover.gone{ opacity:0; transform:translateY(-4%); pointer-events:none; }
+.cover-kad{
+  width:min(100%, 360px); text-align:center; padding:48px 28px 40px;
+  border-radius:180px 180px 28px 28px;       /* bentuk pintu gerbang taman */
+}
+.cover .nama{ font-size:62px; margin:22px 0 20px; }
+.cover-tarikh{ font-family:var(--sans); font-size:13px; letter-spacing:.28em;
+  color:var(--kabur); margin:0 0 30px; padding-left:.28em; }
+.cover-tetamu{ font-size:17px; color:var(--kabur); margin:0 0 14px; font-style:italic; }
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  font-family:var(--sans); font-size:13px; font-weight:400; letter-spacing:.16em;
+  text-transform:uppercase; text-decoration:none; cursor:pointer;
+  padding:13px 26px; border-radius:99px; border:0;
+  background:var(--utama); color:#fbf7f3;
+  box-shadow:0 6px 18px rgba(61,85,119,.22);
+  transition:transform .2s ease, box-shadow .2s ease;
+}
+.btn:hover{ transform:translateY(-1px); box-shadow:0 9px 22px rgba(61,85,119,.28); }
+.btn.garis{ background:rgba(255,255,255,.5); color:var(--utama);
+  border:1px solid var(--garis); box-shadow:none; }
+.leret{ margin:26px 0 0; font-family:var(--sans); font-size:11px; letter-spacing:.2em;
+  text-transform:uppercase; color:var(--lembut); opacity:.8; }
+
+/* ── susun atur ── */
+.kad{ position:relative; z-index:1; max-width:460px; margin:0 auto;
+  padding:0 18px 40px; }
+section{ margin:0 0 22px; text-align:center; }
+.panel{ padding:40px 26px; }
+
+.hero{ min-height:100vh; min-height:100svh; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; padding:60px 0; margin:0; }
+.hero .nama{ font-size:clamp(58px, 18vw, 76px); margin:24px 0 26px; }
+.hero-tarikh{ margin:0; font-size:21px; letter-spacing:.04em; color:var(--ink); }
+.hero-garis{ width:1px; height:56px; margin:34px auto 0;
+  background:linear-gradient(var(--lembut), transparent); }
+
+.salam p{ margin:0 0 14px; }
+.salam .penjemput{ font-size:23px; color:var(--utama); white-space:pre-line;
+  line-height:1.35; margin:6px 0 18px; }
+.salam .nama{ font-size:46px; margin:24px 0 22px; }
+.salam .doa{ font-size:17px; color:var(--kabur); margin:0; }
+
+/* kiraan detik */
+.kiraan-grid{ display:grid; grid-template-columns:repeat(4, 1fr); gap:8px; margin-top:6px; }
+.kiraan-grid div{ padding:14px 0 10px; border-radius:16px;
+  background:rgba(255,255,255,.45); border:1px solid rgba(255,255,255,.75); }
+.kiraan-grid b{ display:block; font-family:var(--serif); font-weight:300; font-size:38px;
+  line-height:1; color:var(--utama); font-variant-numeric:lining-nums tabular-nums; }
+.kiraan-grid span{ display:block; margin-top:8px; font-family:var(--sans); font-size:10px;
+  letter-spacing:.2em; text-transform:uppercase; color:var(--kabur); padding-left:.2em; }
+
+/* butiran majlis */
+.butir{ padding:18px 0; border-top:1px solid var(--garis); }
+.butir:first-of-type{ border-top:0; padding-top:4px; }
+.butir .label{ margin-bottom:8px; }
+.butir p:not(.label){ margin:0; font-size:21px; line-height:1.4; }
+.butir .alamat{ font-size:17px; color:var(--kabur); margin-top:4px; white-space:pre-line;
+  text-wrap:balance; }   /* elak satu perkataan tergantung di baris sendiri */
+.butir .btn{ margin-top:18px; }
+
+/* aturcara */
+.jadual{ list-style:none; margin:0; padding:0; text-align:left; }
+.jadual li{ display:grid; grid-template-columns:112px 1fr; gap:14px; align-items:baseline;
+  padding:14px 0; border-top:1px solid var(--garis); }
+.jadual li:first-child{ border-top:0; }
+.jadual .m{ font-family:var(--sans); font-size:13px; letter-spacing:.06em; color:var(--lembut); }
+.jadual .a{ font-size:20px; line-height:1.3; }
+
+/* ayat */
+.ayat{ padding:30px 10px; }
+.ayat p{ margin:0; font-style:italic; font-size:21px; line-height:1.55; color:var(--utama); }
+.ayat .sumber{ margin-top:14px; font-style:normal; font-family:var(--sans); font-size:11px;
+  letter-spacing:.24em; text-transform:uppercase; color:var(--lembut); }
+
+/* galeri */
+.galeri-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.galeri-grid figure{ margin:0; aspect-ratio:3/4; border-radius:16px; overflow:hidden;
+  background:rgba(255,255,255,.4); }
+.galeri-grid img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+/* RSVP */
+.rsvp-sub{ margin:-8px 0 26px; font-size:17px; color:var(--kabur); }
+form{ text-align:left; }
+.fl{ display:block; font-family:var(--sans); font-size:11px; letter-spacing:.2em;
+  text-transform:uppercase; color:var(--kabur); margin:18px 0 8px; }
+.fi{
+  width:100%; font-family:var(--serif); font-size:19px; color:var(--ink);
+  padding:12px 14px; border-radius:14px; border:1px solid var(--garis);
+  background:rgba(255,255,255,.62); outline:none; -webkit-appearance:none; appearance:none;
+  transition:border-color .2s, background .2s;
+}
+.fi:focus{ border-color:var(--lembut); background:rgba(255,255,255,.85); }
+.fi.err{ border-color:#b4555f; }
+.fi::placeholder{ color:#a39b94; font-style:italic; }
+.ta{ min-height:110px; resize:vertical; line-height:1.45; }
+.seg{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.sg input{ position:absolute; opacity:0; pointer-events:none; }
+.sg span{ display:block; text-align:center; padding:11px 8px; border-radius:14px; cursor:pointer;
+  font-family:var(--sans); font-size:14px; letter-spacing:.04em; color:var(--utama);
+  border:1px solid var(--garis); background:rgba(255,255,255,.5); transition:all .2s; }
+.sg input:checked + span{ background:var(--utama); border-color:var(--utama); color:#fbf7f3; }
+.sg input:focus-visible + span{ outline:2px solid var(--lembut); outline-offset:2px; }
+.ac-wrap{ position:relative; }
+.ac{ position:absolute; left:0; right:0; top:calc(100% + 4px); z-index:5; list-style:none;
+  margin:0; padding:6px; border-radius:14px; background:#fdfaf7;
+  border:1px solid var(--garis); box-shadow:0 12px 28px rgba(45,58,82,.14);
+  max-height:240px; overflow:auto; }
+.ac li{ padding:9px 10px; border-radius:10px; cursor:pointer; font-size:18px; }
+.ac li:hover{ background:#f3ece5; }
+.fld-err{ margin:8px 0 0; font-family:var(--sans); font-size:13.5px; color:#a3434e; }
+.pax-hint{ margin:8px 0 0; font-family:var(--sans); font-size:13px; color:var(--kabur); }
+.sb{ width:100%; margin-top:26px; }
+.sb[disabled]{ opacity:.6; cursor:default; transform:none; }
+.ok{ display:none; margin:18px 0 0; padding:14px 16px; border-radius:14px; text-align:center;
+  font-family:var(--sans); font-size:14px; line-height:1.5;
+  background:rgba(231,240,230,.9); color:#33643a; }
+.ok.show{ display:block; }
+.ok.gagal{ background:rgba(246,231,233,.92); color:#98404e; }
+
+/* ucapan tetamu — satu panel, bukan satu panel setiap ucapan
+   (setiap panel kaca ialah satu lapisan komposit) */
+.ucapan-senarai{ max-height:440px; overflow:auto; text-align:left; margin:0 -6px;
+  padding:0 6px; -webkit-overflow-scrolling:touch; }
+.wish{ padding:14px 0; border-top:1px solid var(--garis); }
+.wish:first-child{ border-top:0; padding-top:0; }
+.wish b{ display:block; font-family:var(--sans); font-weight:500; font-size:13px;
+  letter-spacing:.06em; color:var(--utama); margin-bottom:4px; }
+.wish p{ margin:0; font-size:18px; line-height:1.45; overflow-wrap:anywhere; }
+.wish-empty{ margin:0; text-align:center; color:var(--kabur); font-style:italic; }
+
+/* hubungi */
+.orang{ padding:14px 0; border-top:1px solid var(--garis); }
+.orang:first-of-type{ border-top:0; padding-top:0; }
+.orang p{ margin:0; font-size:20px; }
+.orang a{ font-family:var(--sans); font-size:14px; letter-spacing:.08em; color:var(--lembut);
+  text-decoration:none; }
+
+/* kredit */
+.kredit{ text-align:center; padding:18px 0 30px; }
+.kredit p{ margin:0; font-family:var(--sans); font-size:11px; letter-spacing:.2em;
+  text-transform:uppercase; color:var(--lembut); }
+.kredit .siapa{ margin-top:6px; font-family:var(--serif); font-style:italic; font-size:22px;
+  letter-spacing:0; text-transform:none; color:var(--utama); }
+
+/* butang muzik */
+.muzik{
+  position:fixed; right:16px; bottom:calc(16px + env(safe-area-inset-bottom)); z-index:20;
+  width:50px; height:50px; border-radius:50%; padding:0; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; color:var(--utama);
+}
+body.locked .muzik{ visibility:hidden; }   /* muka depan lutsinar; jangan tunjuk butang di bawahnya */
+.muzik svg{ width:20px; height:20px; }
+.muzik .gelang{ position:absolute; inset:5px; border-radius:50%;
+  border:1px dashed rgba(61,85,119,.4); }
+.muzik.main .gelang{ animation:pusing 6s linear infinite; }
+.muzik .ikon-henti{ display:none; }
+.muzik.main .ikon-henti{ display:block; }
+.muzik.main .ikon-main{ display:none; }
+@keyframes pusing{ to{ transform:rotate(360deg); } }
+#yt-frame{ position:fixed; width:1px; height:1px; left:-10px; bottom:0; opacity:0;
+  pointer-events:none; border:0; }
+
+/* ── muncul semasa skrol ──
+   Transform dibuang selepas selesai (.siap) supaya Safari melepaskan
+   lapisan komposit. */
+.muncul{ opacity:0; transform:translateY(22px);
+  transition:opacity .9s ease, transform .9s cubic-bezier(.2,.7,.2,1); }
+.muncul.in{ opacity:1; transform:none; }
+.muncul.siap{ transition:none; }
+@media (prefers-reduced-motion: reduce){
+  .muncul{ opacity:1; transform:none; transition:none; }
+  .cover{ transition:opacity .3s; }
+}
+
+/* telefon kecil (360px): beri ruang supaya baris alamat tidak terbalut */
+@media (max-width:380px){
+  .kad{ padding-left:14px; padding-right:14px; }
+  .panel{ padding:36px 18px; }
+  .butir .alamat{ font-size:16px; }
+}
+@media (min-width:700px){
+  .kad{ padding-top:10px; }
+  .panel{ padding:46px 40px; }
+}
+</style>
+</head>
+<body class="locked">
+
+<div class="taman" aria-hidden="true">
+  <img class="jauh jauh-1" src="assets/taman-kanan.svg?v=2" alt="">
+  <img class="jauh jauh-2" src="assets/taman-kiri.svg?v=2" alt="">
+  <img class="dekat kiri" src="assets/taman-kiri.svg?v=2" alt="">
+  <img class="dekat kanan" src="assets/taman-kanan.svg?v=2" alt="">
+</div>
+
+<div class="cover" id="cover" role="button" tabindex="0" aria-label="Buka jemputan">
+  <div class="cover-kad kaca">
+    <p class="label">Walimatul Urus</p>
+    <h1 class="nama">
+      <span data-isi="lelaki" data-kosong="( Pengantin lelaki )"></span>
+      <span class="dan">&amp;</span>
+      <span data-isi="perempuan" data-kosong="( Pengantin perempuan )"></span>
+    </h1>
+    <p class="cover-tarikh" data-isi="tarikhRingkas" data-kosong="( TARIKH )"></p>
+    <p class="cover-tetamu">Kepada tetamu yang dihormati</p>
+    <span class="btn">Buka Jemputan</span>
+    <p class="leret">Tekan atau leret ke atas</p>
+  </div>
+</div>
+
+<main class="kad">
+
+  <section class="hero">
+    <p class="label">Walimatul Urus</p>
+    <p class="nama">
+      <span data-isi="lelaki" data-kosong="( Pengantin lelaki )"></span>
+      <span class="dan">&amp;</span>
+      <span data-isi="perempuan" data-kosong="( Pengantin perempuan )"></span>
+    </p>
+    <p class="hero-tarikh" data-isi="tarikhPanjang" data-kosong="( Tarikh majlis )"></p>
+    <div class="hero-garis"></div>
+  </section>
+
+  <section class="salam panel kaca muncul">
+    <img class="hiasan" src="assets/ranting.svg?v=2" alt="">
+    <p>Assalamualaikum wbt</p>
+    <p>Dengan penuh rasa syukur kami,</p>
+    <p class="penjemput" data-isi="penjemput" data-kosong="( Nama ibu bapa pengantin lelaki )"></p>
+    <p>menjemput Tuan/Puan/Encik/Cik<br>ke Majlis Walimatul Urus Putera kami,</p>
+    <p class="nama">
+      <span data-isi="lelaki" data-kosong="( Pengantin lelaki )"></span>
+      <span class="dan">&amp;</span>
+      <span data-isi="perempuan" data-kosong="( Pengantin perempuan )"></span>
+    </p>
+    <p class="doa">Semoga kehadiran tetamu menambah<br>keberkatan majlis</p>
+  </section>
+
+  <section class="panel kaca muncul">
+    <p class="label">Menghitung Hari</p>
+    <h2>Hari yang dinanti</h2>
+    <div class="kiraan-grid">
+      <div><b id="cd-d">--</b><span>Hari</span></div>
+      <div><b id="cd-h">--</b><span>Jam</span></div>
+      <div><b id="cd-m">--</b><span>Minit</span></div>
+      <div><b id="cd-s">--</b><span>Saat</span></div>
+    </div>
+  </section>
+
+  <section class="panel kaca muncul">
+    <p class="label">Butiran Majlis</p>
+    <h2>Tarikh &amp; Tempat</h2>
+    <div class="butir">
+      <p class="label">Tarikh</p>
+      <p data-isi="tarikhPanjang" data-kosong="( Tarikh majlis )"></p>
+    </div>
+    <div class="butir">
+      <p class="label">Masa</p>
+      <p data-isi="masa" data-kosong="( Masa majlis )"></p>
+    </div>
+    <div class="butir">
+      <p class="label">Tempat</p>
+      <p data-isi="tempat" data-kosong="( Nama tempat )"></p>
+      <p class="alamat" data-isi="alamat" data-kosong="( Alamat majlis )"></p>
+      <a class="btn garis" id="btn-peta" href="#" target="_blank" rel="noopener" hidden>
+        <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z"/></svg>
+        Google Maps
+      </a>
+    </div>
+  </section>
+
+  <section class="panel kaca muncul">
+    <p class="label">Aturcara</p>
+    <h2>Perjalanan Majlis</h2>
+    <ul class="jadual" id="jadual"></ul>
+  </section>
+
+  <section class="ayat muncul">
+    <img class="hiasan" src="assets/ranting.svg?v=2" alt="">
+    <p>&ldquo;Dan di antara tanda-tanda kekuasaan-Nya, Dia menciptakan untukmu
+      pasangan hidup dari jenismu sendiri, supaya kamu cenderung dan merasa
+      tenteram kepadanya, dan dijadikan-Nya di antaramu rasa kasih dan sayang.&rdquo;</p>
+    <p class="sumber">Surah Ar-Rum &middot; Ayat 21</p>
+  </section>
+
+  <section class="panel kaca muncul" id="galeri" hidden>
+    <p class="label">Galeri</p>
+    <h2>Kenangan Kami</h2>
+    <div class="galeri-grid" id="galeri-grid"></div>
+  </section>
+
+  <section class="panel kaca muncul" id="rsvp">
+    <p class="label">RSVP</p>
+    <h2>Sahkan Kehadiran</h2>
+    <p class="rsvp-sub">Mohon sahkan kehadiran anda dan tinggalkan ucapan buat pengantin.</p>
+    <form id="rsvp-form" novalidate>
+      <label class="fl" for="r-nama">Nama</label>
+      <div class="ac-wrap">
+        <input class="fi" id="r-nama" type="text" placeholder="Nama anda"
+               autocomplete="off" role="combobox" aria-expanded="false"
+               aria-autocomplete="list" aria-controls="r-ac">
+        <ul class="ac" id="r-ac" role="listbox" hidden></ul>
+      </div>
+      <p class="fld-err" id="r-nama-err" role="alert" hidden></p>
+
+      <span class="fl">Kehadiran</span>
+      <div class="seg">
+        <label class="sg"><input type="radio" name="hadir" value="Hadir" checked><span>Hadir</span></label>
+        <label class="sg"><input type="radio" name="hadir" value="Tidak Hadir"><span>Tidak Hadir</span></label>
+      </div>
+
+      <div id="wrap-bil">
+        <label class="fl" for="r-bil">Bilangan Kehadiran</label>
+        <input class="fi" id="r-bil" type="number" min="1" max="50" value="1" inputmode="numeric">
+        <p class="pax-hint" id="r-pax-hint" hidden></p>
+      </div>
+
+      <label class="fl" for="r-ucapan">Ucapan</label>
+      <textarea class="fi ta" id="r-ucapan" maxlength="600"
+                placeholder="Tulis ucapan dan doa anda di sini"></textarea>
+
+      <button class="btn sb" type="submit">Hantar RSVP &amp; Ucapan</button>
+    </form>
+    <p class="ok" id="rsvp-ok" data-ok="Terima kasih. RSVP dan ucapan anda telah berjaya dihantar."></p>
+  </section>
+
+  <section class="panel kaca muncul">
+    <p class="label">Buku Tetamu</p>
+    <h2>Ucapan Tetamu</h2>
+    <div class="ucapan-senarai" id="wishes">
+      <p class="wish-empty">Belum ada ucapan. Jadilah yang pertama.</p>
+    </div>
+  </section>
+
+  <section class="panel kaca muncul">
+    <p class="label">Hubungi</p>
+    <h2>Untuk sebarang pertanyaan</h2>
+    <div id="hubungi"></div>
+  </section>
+
+  <footer class="kredit">
+    <img class="hiasan" src="assets/ranting.svg?v=2" alt="">
+    <p>Designed with love by</p>
+    <p class="siapa">Zaitul Akmal</p>
+  </footer>
+</main>
+
+<button class="muzik kaca" id="btn-muzik" type="button" aria-label="Main atau henti muzik" hidden>
+  <span class="gelang"></span>
+  <svg class="ikon-main" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9 18.5a2.5 2.5 0 1 1-2-2.45V5.5l11-2.2v11.7a2.5 2.5 0 1 1-2-2.45V7.2l-7 1.4v9.9Z"/></svg>
+  <svg class="ikon-henti" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg>
+</button>
+
+<script>
+(function(){
+  "use strict";
+  var C = window.CONFIG;
+  var $ = function(s){ return document.querySelector(s); };
+
+  function esc(s){ return String(s).replace(/[&<>"']/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+
+  /* ── isi kandungan daripada CONFIG ── */
+  var HARI  = ['Ahad','Isnin','Selasa','Rabu','Khamis','Jumaat','Sabtu'];
+  var BULAN = ['Januari','Februari','Mac','April','Mei','Jun','Julai','Ogos',
+               'September','Oktober','November','Disember'];
+  var sasaran = C.tarikhMajlis ? new Date(C.tarikhMajlis).getTime() : NaN;
+  var tarikhPanjang = '', tarikhRingkas = '';
+  if (!isNaN(sasaran)){
+    /* sentiasa waktu Malaysia, walau di mana tetamu membuka kad */
+    var d = new Date(sasaran + 8 * 3600 * 1000);
+    tarikhPanjang = HARI[d.getUTCDay()] + ', ' + d.getUTCDate() + ' ' +
+                    BULAN[d.getUTCMonth()] + ' ' + d.getUTCFullYear();
+    tarikhRingkas = [d.getUTCDate(), d.getUTCMonth() + 1, d.getUTCFullYear()]
+                    .map(function(n){ return String(n).padStart(2,'0'); }).join(' · ');
+  }
+  var NILAI = {
+    lelaki: C.lelaki, perempuan: C.perempuan, penjemput: C.penjemput,
+    masa: C.masa, tempat: C.tempat, alamat: C.alamat,
+    tarikhPanjang: tarikhPanjang, tarikhRingkas: tarikhRingkas
+  };
+  document.querySelectorAll('[data-isi]').forEach(function(el){
+    var v = NILAI[el.getAttribute('data-isi')];
+    el.textContent = v || el.getAttribute('data-kosong');
+    el.classList.toggle('kosong', !v);
+  });
+
+  var peta = $('#btn-peta');
+  if (C.peta){ peta.href = C.peta; peta.hidden = false; }
+
+  /* aturcara kosong -> sembunyi seluruh bahagian (sama seperti galeri),
+     supaya tetamu tidak nampak ruang ( … ) pada kad yang sudah live */
+  var jadual = $('#jadual');
+  if ((C.aturcara || []).length){
+    jadual.innerHTML = C.aturcara.map(function(a){
+      return '<li><span class="m">' + esc(a.masa) + '</span><span class="a">' +
+             esc(a.acara) + '</span></li>'; }).join('');
+  } else {
+    jadual.closest('section').hidden = true;
+  }
+
+  var hub = $('#hubungi');
+  hub.innerHTML = (C.hubungi || []).length
+    ? C.hubungi.map(function(h){
+        var tel = String(h.telefon).replace(/[^\d+]/g, '');
+        return '<div class="orang"><p>' + esc(h.nama) + '</p><a href="tel:' + esc(tel) +
+               '">' + esc(h.telefon) + '</a></div>'; }).join('')
+    : '<div class="orang"><p class="kosong">( Nama &amp; nombor telefon )</p></div>';
+
+  /* ── buka jemputan: tekan atau leret ke atas ── */
+  var cover = $('#cover'), dibuka = false;
+  function bukaUndangan(){
+    if (dibuka) return;
+    dibuka = true;
+    cover.classList.add('gone');
+    document.body.classList.remove('locked');
+    window.scrollTo(0, 0);
+    setTimeout(function(){ cover.style.display = 'none'; }, 1200);
+    sediakanPemain();                  // muat pemain bisu awal-awal
+  }
+  cover.addEventListener('click', bukaUndangan);
+  cover.addEventListener('keydown', function(e){
+    if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); bukaUndangan(); }
+  });
+  var mulaY = null;
+  cover.addEventListener('touchstart', function(e){ mulaY = e.touches[0].clientY; }, { passive:true });
+  cover.addEventListener('touchmove', function(e){
+    if (mulaY !== null && mulaY - e.touches[0].clientY > 45){ mulaY = null; bukaUndangan(); }
+  }, { passive:true });
+  cover.addEventListener('wheel', function(e){ if (e.deltaY > 12) bukaUndangan(); }, { passive:true });
+
+  /* ── muncul semasa skrol ── */
+  var muncul = document.querySelectorAll('.muncul');
+  function siapkan(el){
+    el.classList.add('in');
+    setTimeout(function(){ el.classList.add('siap'); }, 1000);
+  }
+  if ('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(ents){
+      ents.forEach(function(en){
+        if (en.isIntersecting){ siapkan(en.target); io.unobserve(en.target); }
+      });
+    }, { rootMargin:'0px 0px -8% 0px' });
+    muncul.forEach(function(el){ io.observe(el); });
+  } else {
+    muncul.forEach(siapkan);
+  }
+
+  /* ── kiraan detik ── */
+  function pad(n){ return String(n).padStart(2,'0'); }
+  function tick(){
+    if (isNaN(sasaran)) return;
+    var s = Math.max(0, Math.floor((sasaran - Date.now()) / 1000));
+    $('#cd-d').textContent = pad(Math.floor(s / 86400));
+    $('#cd-h').textContent = pad(Math.floor(s % 86400 / 3600));
+    $('#cd-m').textContent = pad(Math.floor(s % 3600 / 60));
+    $('#cd-s').textContent = pad(s % 60);
+  }
+  tick(); setInterval(tick, 1000);
+
+  /* ── muzik ──
+     Sama seperti kad Zaitul: pemain dimuat AWAL dalam keadaan bisu pada
+     sentuhan membuka kad (autoplay bisu sentiasa dibenarkan), kemudian
+     bunyinya dibuka bila tetamu sampai ke hujung, atau bila butang ditekan. */
+  var btnMuzik = $('#btn-muzik');
+  var VID = C.lagu || '';
+  var frame = null, sedia = false, berbunyi = false, giliran = [];
+  if (VID) btnMuzik.hidden = false;
+
+  function ytPost(func, args){
+    if (frame && frame.contentWindow){
+      frame.contentWindow.postMessage(
+        JSON.stringify({ event:'command', func:func, args:args || [] }), '*');
+    }
+  }
+  function hantar(func, args){
+    if (sedia) ytPost(func, args);
+    else giliran.push([func, args]);       /* pemain belum siap — simpan dulu */
+  }
+  function sediakanPemain(){
+    if (frame || !VID) return;
+    frame = document.createElement('iframe');
+    frame.id = 'yt-frame';
+    frame.title = 'Muzik latar';
+    frame.allow = 'autoplay; encrypted-media';
+    frame.addEventListener('load', function(){
+      setTimeout(function(){
+        sedia = true;
+        while (giliran.length){ var c = giliran.shift(); ytPost(c[0], c[1]); }
+      }, 500);
+    });
+    frame.src = 'https://www.youtube.com/embed/' + encodeURIComponent(VID) +
+                '?enablejsapi=1&autoplay=1&mute=1&loop=1&playsinline=1' +
+                '&controls=0&modestbranding=1&playlist=' + encodeURIComponent(VID);
+    document.body.appendChild(frame);
+  }
+  function bukaBunyi(){
+    if (berbunyi || !VID) return;
+    berbunyi = true;
+    sediakanPemain();
+    hantar('unMute'); hantar('setVolume', [55]); hantar('playVideo');
+    btnMuzik.classList.add('main');
+  }
+  function tutupBunyi(){
+    berbunyi = false;
+    hantar('pauseVideo'); hantar('mute');
+    btnMuzik.classList.remove('main');
+  }
+  btnMuzik.addEventListener('click', function(){ berbunyi ? tutupBunyi() : bukaBunyi(); });
+
+  var autoDone = false;
+  function checkEnd(){
+    if (autoDone || !dibuka || !VID) return;
+    var doc = document.documentElement;
+    var y = window.scrollY || doc.scrollTop || 0;
+    if (y + window.innerHeight < doc.scrollHeight - 220) return;
+    autoDone = true;
+    window.removeEventListener('scroll', checkEnd);
+    bukaBunyi();
+    /* sandaran: kalau pelayar masih sekat, sentuhan seterusnya membukanya */
+    document.addEventListener('pointerdown', function(){
+      if (berbunyi){ hantar('unMute'); hantar('setVolume', [55]); hantar('playVideo'); }
+    }, { once:true });
+  }
+  window.addEventListener('scroll', checkEnd, { passive:true });
+
+  /* ── galeri ── */
+  if ((C.gambar || []).length){
+    $('#galeri-grid').innerHTML = C.gambar.map(function(src, i){
+      return '<figure><img src="' + esc(src) + '" alt="Gambar ' + (i + 1) +
+             '" loading="lazy"></figure>';
+    }).join('');
+    $('#galeri').hidden = false;
+  }
+
+  /* ── pangkalan data (Firestore REST — tiada SDK luar) ──
+     Ucapan disimpan dalam koleksi awam (nama + mesej sahaja) supaya boleh
+     dipaparkan di sini. Data kehadiran kekal dalam koleksi RSVP yang tertutup. */
+  var DB = C.rsvpDb || {};
+  function dbUrl(koleksi){
+    if (!DB.projectId || !DB.apiKey || !koleksi) return null;
+    return 'https://firestore.googleapis.com/v1/projects/' + DB.projectId +
+           '/databases/(default)/documents/' + koleksi +
+           '?key=' + encodeURIComponent(DB.apiKey);
+  }
+  function tulis(koleksi, fields){
+    var url = dbUrl(koleksi);
+    if (!url) return Promise.reject(new Error('tiada-db'));
+    return fetch(url, {
+      method:'POST', headers:{ 'Content-Type':'application/json' },
+      body: JSON.stringify({ fields: fields })
+    }).then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); });
+  }
+
+  function lukisUcapan(senarai){
+    $('#wishes').innerHTML = senarai.length
+      ? senarai.map(function(u){
+          return '<div class="wish"><b>' + esc(u.nama) + '</b><p>' + esc(u.teks) + '</p></div>';
+        }).join('')
+      : '<p class="wish-empty">Belum ada ucapan. Jadilah yang pertama.</p>';
+  }
+  function muatUcapan(){
+    var url = dbUrl(DB.ucapan);
+    if (!url) return;
+    fetch(url + '&pageSize=200')
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(d){
+        if (!d) return;
+        var a = (d.documents || []).map(function(doc){
+          var f = doc.fields || {};
+          return { nama:(f.nama || {}).stringValue || '', teks:(f.teks || {}).stringValue || '',
+                   masa:(f.masa || {}).stringValue || '' };
+        }).filter(function(u){ return u.teks; });
+        a.sort(function(x, y){ return (y.masa || '').localeCompare(x.masa || ''); });
+        lukisUcapan(a);
+      })
+      .catch(function(){});
+  }
+  muatUcapan();
+
+  /* ── penapis senarai jemputan ── */
+  var TETAMU = (window.TETAMU || []).map(function(g){
+    return (typeof g === 'string') ? { nama:g, pax:0 } : { nama:g.nama, pax:g.pax || 0 };
+  }).filter(function(g){ return g.nama; });
+  var BERTAPIS = TETAMU.length > 0;
+
+  function norm(s){
+    s = String(s).toLowerCase();
+    if (s.normalize) s = s.normalize('NFD').replace(/[̀-ͯ]/g, '');
+    return s.replace(/[^a-z0-9 ]+/g, ' ').replace(/\s+/g, ' ').trim();
+  }
+  var INDEX = TETAMU.map(function(g){ return { g:g, k:norm(g.nama) }; });
+
+  var elNama = $('#r-nama'), elAc = $('#r-ac'), elErr = $('#r-nama-err');
+  var elBil = $('#r-bil'), elPax = $('#r-pax-hint');
+  var pilihan = null;
+
+  function cariTepat(v){
+    var k = norm(v);
+    if (!k) return null;
+    for (var i = 0; i < INDEX.length; i++) if (INDEX[i].k === k) return INDEX[i].g;
+    return null;
+  }
+  function cadangan(v){
+    var k = norm(v), out = [];
+    if (k.length < 2) return out;
+    for (var i = 0; i < INDEX.length && out.length < 8; i++)
+      if (INDEX[i].k.indexOf(k) !== -1) out.push(INDEX[i].g);
+    return out;
+  }
+  function tutupAc(){
+    elAc.hidden = true; elAc.innerHTML = '';
+    elNama.setAttribute('aria-expanded', 'false');
+  }
+  function tunjukPax(g){
+    if (g && g.pax > 0){
+      elBil.max = g.pax;
+      if (+elBil.value > g.pax) elBil.value = g.pax;
+      elPax.textContent = 'Jemputan ini untuk ' + g.pax + ' orang.';
+      elPax.hidden = false;
+    } else { elBil.max = 50; elPax.hidden = true; }
+  }
+  function pilih(g){
+    pilihan = g;
+    elNama.value = g.nama;
+    elNama.classList.remove('err');
+    elErr.hidden = true;
+    tunjukPax(g);
+    tutupAc();
+  }
+  function lukisAc(list){
+    if (!list.length){ tutupAc(); return; }
+    elAc.innerHTML = '';
+    list.forEach(function(g){
+      var li = document.createElement('li');
+      li.textContent = g.nama;
+      li.setAttribute('role', 'option');
+      li.addEventListener('mousedown', function(ev){ ev.preventDefault(); pilih(g); });
+      elAc.appendChild(li);
+    });
+    elAc.hidden = false;
+    elNama.setAttribute('aria-expanded', 'true');
+  }
+  if (BERTAPIS){
+    elNama.setAttribute('placeholder', 'Taip nama anda seperti dalam jemputan');
+    elNama.addEventListener('input', function(){
+      pilihan = cariTepat(elNama.value);
+      elNama.classList.remove('err');
+      elErr.hidden = true;
+      tunjukPax(pilihan);
+      lukisAc(cadangan(elNama.value));
+    });
+    elNama.addEventListener('blur', function(){ setTimeout(tutupAc, 120); });
+    elNama.addEventListener('keydown', function(ev){
+      if (ev.key === 'Escape') tutupAc();
+      if (ev.key === 'Enter' && !elAc.hidden){
+        var first = elAc.querySelector('li');
+        if (first){ ev.preventDefault(); first.dispatchEvent(new MouseEvent('mousedown')); }
+      }
+    });
+  }
+
+  function sahNama(){
+    var v = elNama.value.trim();
+    if (!BERTAPIS){
+      if (v) return true;
+      elErr.textContent = 'Sila isi nama anda.';
+    } else {
+      var g = pilihan || cariTepat(v);
+      if (g){ pilihan = g; return true; }
+      elErr.textContent = v
+        ? 'Nama ini tiada dalam senarai jemputan. Sila semak ejaan, atau hubungi keluarga pengantin.'
+        : 'Sila isi nama anda.';
+    }
+    elNama.classList.add('err');
+    elErr.hidden = false;
+    elNama.focus();
+    return false;
+  }
+
+  document.querySelectorAll('input[name=hadir]').forEach(function(r){
+    r.addEventListener('change', function(){
+      $('#wrap-bil').style.display = (r.value === 'Hadir' && r.checked) ? '' : 'none';
+    });
+  });
+
+  var form = $('#rsvp-form'), btnHantar = form.querySelector('.sb');
+  var labelHantar = btnHantar.textContent, okBox = $('#rsvp-ok');
+  form.addEventListener('submit', function(ev){
+    ev.preventDefault();
+    if (!sahNama()) return;
+    var nama   = pilihan ? pilihan.nama : elNama.value.trim();   // guna ejaan rasmi
+    var hadir  = document.querySelector('input[name=hadir]:checked').value;
+    var bil    = parseInt(elBil.value, 10) || 1;
+    var ucapan = $('#r-ucapan').value.trim();
+    if (pilihan && pilihan.pax > 0 && bil > pilihan.pax) bil = pilihan.pax;
+    bil = Math.min(Math.max(bil, 1), 50);
+    if (hadir !== 'Hadir') bil = 0;
+    var masa = new Date().toISOString();
+
+    btnHantar.disabled = true; btnHantar.textContent = 'Menghantar…';
+    okBox.classList.remove('show', 'gagal');
+
+    tulis(DB.rsvp, {
+      nama:{ stringValue:nama }, kehadiran:{ stringValue:hadir },
+      bilangan:{ integerValue:String(bil) }, ucapan:{ stringValue:ucapan },
+      masa:{ stringValue:masa }
+    }).then(function(){
+      if (ucapan){
+        tulis(DB.ucapan, { nama:{ stringValue:nama }, teks:{ stringValue:ucapan },
+                           masa:{ stringValue:masa } }).then(muatUcapan, muatUcapan);
+      }
+      okBox.textContent = okBox.getAttribute('data-ok');
+      okBox.classList.add('show');
+      form.reset();
+      pilihan = null;
+      elPax.hidden = true; elBil.max = 50;
+      $('#wrap-bil').style.display = '';
+
+      var wa = (C.waRsvp || '').replace(/\D/g, '');
+      if (wa){
+        var msg = ['*RSVP — Walimatul Urus ' + (C.lelaki || '') + '*', 'Nama: ' + nama,
+                   'Kehadiran: ' + hadir]
+          .concat(hadir === 'Hadir' ? ['Bilangan: ' + bil + ' orang'] : [])
+          .concat(ucapan ? ['Ucapan: ' + ucapan] : []).join('\n');
+        window.open('https://wa.me/' + wa + '?text=' + encodeURIComponent(msg), '_blank', 'noopener');
+      }
+    }).catch(function(){
+      /* jangan beritahu tetamu ia berjaya kalau sebenarnya gagal */
+      okBox.textContent = 'Maaf, RSVP anda tidak dapat dihantar. Sila cuba lagi, ' +
+                          'atau hubungi keluarga pengantin.';
+      okBox.classList.add('show', 'gagal');
+    }).then(function(){
+      btnHantar.disabled = false; btnHantar.textContent = labelHantar;
+    });
+  });
+})();
+</script>
+</body>
+</html>

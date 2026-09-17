@@ -1,0 +1,6 @@
+.DS_Store
+*.log
+firebase-debug.log*
+.firebase/
+tools/cache/
+senarai-*.html

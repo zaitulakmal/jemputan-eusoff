@@ -1,0 +1,614 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Walimatul Urus · Eusoff &amp; Zaitul</title>
+<meta name="theme-color" content="#efe4da">
+<!-- Safari iOS menukar nombor telefon jadi pautan biru secara automatik -->
+<meta name="format-detection" content="telephone=no,date=no,address=no,email=no">
+<meta property="og:title" content="Walimatul Urus · Eusoff &amp; Zaitul">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:,">
+<!--
+  FAIL INI DIJANA oleh tools/bina.py daripada tools/shell.html.
+  Jangan sunting index.html terus — sunting tools/shell.html (CONFIG,
+  TETAMU, gaya) atau KANDUNGAN dalam tools/bina.py, kemudian:
+      python3 tools/bina.py
+-->
+
+<script>
+/* ═══ TUKAR MAKLUMAT DI SINI (dalam tools/shell.html) ═══ */
+window.CONFIG = {
+  tarikhMajlis: "2027-03-20T08:00:00+08:00",   // sasaran kiraan detik
+  peta:   "https://www.google.com/maps/search/?api=1&query=Asiana+Grand+Hall+Menara+PKNS+Petaling+Jaya",
+  // "A Thousand Years (Wedding Version) featuring Pachelbel's Canon" — piano solo,
+  // Paul Hankinson, 6:02. Pilihan lain yang diuji main: Red Swan piano (sWcgKts80vM, 4:57).
+  lagu:   "Zdd_j-Y-Xt8",   // ID video YouTube
+  waRsvp: "",              // biar kosong; isi kalau nak RSVP masuk WhatsApp juga
+
+  /* Pangkalan data sama dengan kad Zaitul, tetapi koleksi berasingan.
+     Peraturan keselamatan diurus dalam repo jemputan-eusoff-zaitul. */
+  rsvpDb: {
+    projectId: "fir-demo-b08a9",
+    apiKey:    "AIzaSyC2idlHM9rhMMKxc7NpCNDNOP_NMApQjcc",
+    rsvp:      "rsvp_eusoff",
+    ucapan:    "ucapan_eusoff"
+  }
+};
+
+/* Senarai jemputan. Hanya nama dalam senarai ini boleh hantar RSVP.
+   Biarkan kosong kalau nak sesiapa sahaja boleh RSVP.
+     "Ahmad bin Ali"                    -> tiada had orang
+     { nama: "Ahmad bin Ali", pax: 2 }  -> maksimum 2 orang
+   senarai.html dan tools/laporan.py membaca blok ini terus. */
+window.TETAMU = [
+  // { nama: "Ahmad bin Ali", pax: 2 },
+  // "Siti binti Osman",
+];
+</script>
+
+<style>
+/*__FONTS__*/
+
+/* Palet nude + biru (sama dengan tools/warna.py) */
+:root{ --nude:#efe4da; --nude-2:#f7f1eb; --biru-tua:#3d5577; --biru:#7d93b2; --dakwat:#2d3a52; }
+
+*,*::before,*::after{ box-sizing:border-box; }
+html,body{ margin:0; padding:0; overflow-x:hidden; max-width:100%; }
+body{ background:var(--nude); -webkit-text-size-adjust:100%; -webkit-tap-highlight-color:transparent; }
+img{ display:block; border:0; }
+[hidden]{ display:none !important; }
+:focus-visible{ outline:2px solid var(--biru-tua); outline-offset:2px; }
+a[href^="tel"], a[href^="sms"]{ color:inherit !important; text-decoration:none !important; }
+
+/* ── kanvas ── */
+.wrap{ position:relative; width:100%; overflow:hidden; background:var(--nude); }
+.stage{ position:absolute; top:0; left:0; transform-origin:0 0; }
+.frame{ position:relative; overflow:hidden; }
+
+/* Lapisan pendedahan: kotak sempadan kandungannya sahaja (bukan seluruh
+   kanvas), dan transform dibuang selepas selesai (.siap) — kad Zaitul
+   pernah dibunuh Safari iOS kerana lapisan komposit bersaiz kanvas. */
+.band{
+  position:absolute; pointer-events:none; opacity:0; transform:translateY(34px);
+  transition:opacity 1s cubic-bezier(.22,.7,.3,1), transform 1.05s cubic-bezier(.22,.7,.3,1);
+}
+.band.in{ opacity:1; transform:none; }
+.band.siap{ transition:none; transform:none; will-change:auto; }
+.band .bt, .band .yt, .band #rsvp-link, .band .home-btn{ pointer-events:auto; }
+
+.im{ position:absolute; overflow:hidden; }
+.im>img{ position:absolute; max-width:none; }
+.sh{ position:absolute; }
+.sh>svg{ display:block; overflow:visible; }
+/* teks: bekas flex supaya teks satu baris yang lebih lebar daripada kotak
+   melimpah sama rata ke kiri dan kanan, bukan ke kanan sahaja */
+.t{ position:absolute; display:flex; align-items:center; justify-content:center; }
+/* baris disusun oleh bina.py (balutan asal Canva jadi \n), jadi tiada
+   balutan automatik — baris yang terlalu panjang dikecilkan oleh muatTeks */
+.t>span{ display:block; flex:none; width:max-content; white-space:pre; }
+#rsvp-link{ cursor:pointer; }
+.bt{ position:absolute; display:flex; align-items:center; justify-content:center;
+  text-decoration:none; line-height:1; white-space:nowrap; cursor:pointer; }
+.home-btn{ cursor:pointer; transition:transform .25s ease; }
+.home-btn:hover{ transform:translateY(-3px); }
+
+/* rama-rama: mengepak di tempat, seperti rama-rama beranimasi templat asal */
+.kupu-diam{ position:absolute; pointer-events:none; }
+.kupu-diam img{ display:block; width:100%; height:auto; transform-origin:50% 50%;
+  animation:kepak .62s ease-in-out infinite alternate; }
+.kupu-diam.k2 img{ animation-duration:.54s; animation-delay:-.2s; }
+@keyframes kepak{ from{ transform:scaleX(1); } to{ transform:scaleX(.62); } }
+
+/* ── kiraan detik (ganti benaman betterimages.ai) ── */
+.cd{ position:absolute; display:flex; flex-direction:column; justify-content:center; color:var(--biru-tua); }
+.cd-num{ display:flex; justify-content:center; font-family:'kad-playfair',Georgia,serif; font-weight:400;
+  font-size:48px; line-height:1; letter-spacing:.01em; font-variant-numeric:lining-nums tabular-nums; }
+.cd-num>span{ display:inline-block; white-space:nowrap; }
+.cd-lab{ display:flex; margin-top:8px; font-family:'kad-playfair',Georgia,serif; font-weight:700;
+  font-size:12px; letter-spacing:.06em; }
+.cd-lab span{ flex:1; text-align:center; }
+
+/* ── kalendar (dibina semula untuk bulan majlis) ── */
+.kal{ position:absolute; color:var(--biru-tua); text-align:center; }
+.kal-tajuk{ font-family:'kad-snell','Apple Chancery',cursive; line-height:1; }
+.kal-grid{ display:grid; grid-template-columns:repeat(7,1fr); align-items:center; }
+/* Bodoni FLF: angka sebaris (Cormorant guna angka gaya lama yang naik turun) */
+.kal-kepala{ font-family:'kad-bodoni',Didot,Georgia,serif; font-style:italic; }
+.kal-hari{ font-family:'kad-bodoni',Didot,Georgia,serif; font-variant-numeric:lining-nums; }
+.kal-hati{ position:relative; display:inline-flex; align-items:center; justify-content:center; }
+.kal-hati svg{ position:absolute; inset:0; margin:auto; }
+.kal-hati b{ position:relative; font-weight:600; color:var(--nude); }
+
+/* ── muzik ── */
+.yt{ cursor:pointer; z-index:5; }
+#yt-frame{ position:fixed; left:0; bottom:0; width:2px; height:2px; opacity:.01;
+  pointer-events:none; border:0; z-index:-1; }
+.spinning>img{ animation:spin 4s linear infinite; }
+@keyframes spin{ to{ transform:rotate(360deg); } }
+
+/* ── muka depan ── */
+#cover{ position:fixed; inset:0; z-index:60; background:var(--nude); overflow:hidden;
+  height:100vh; height:100dvh; transform-origin:50% 0; transition:opacity .7s ease, visibility .7s; }
+#cover.gone{ opacity:0; visibility:hidden; transform:translateY(-104%) scale(1.18);
+  transition:transform 1.15s cubic-bezier(.6,0,.25,1), opacity .95s ease .15s, visibility 1.15s; }
+#cover .stage{ cursor:pointer; }
+body.locked{ overflow:hidden; height:100vh; height:100dvh; }
+
+/* ── RSVP (ganti codelet Canva; gaya ikut templat, warna nude + biru) ── */
+.rsvp{ background:var(--nude-2); padding:40px 20px 64px; font-family:'kad-playfair',Georgia,serif; color:var(--dakwat); }
+.rsvp-card, .wishes-title, #wishes, .credit{ max-width:470px; margin-left:auto; margin-right:auto; }
+.rsvp-card{ background:#fff; border:1px solid rgba(61,85,119,.14); border-radius:16px;
+  padding:30px 24px 30px; box-shadow:0 8px 28px rgba(45,58,82,.08); }
+.rsvp-title{ font-weight:700; font-size:30px; line-height:1.2; color:var(--biru-tua); margin:0 0 8px; text-align:center; }
+.rsvp-sub{ font-size:15px; line-height:1.5; color:#55607a; margin:0 0 24px; text-align:center; }
+.fl{ display:block; font-size:15px; font-weight:700; color:var(--biru-tua); margin:0 0 8px; }
+.fi{ width:100%; padding:12px 14px; font:inherit; font-size:16px; color:var(--dakwat);
+  background:#fbf8f5; border:1px solid rgba(61,85,119,.22); border-radius:10px; outline:none;
+  margin-bottom:18px; transition:border-color .2s; -webkit-appearance:none; appearance:none; }
+.fi:focus{ border-color:var(--biru-tua); }
+.fi::placeholder{ color:#a3a8b5; }
+.ta{ min-height:104px; resize:vertical; line-height:1.5; }
+.ac-wrap{ position:relative; margin-bottom:18px; }
+.ac-wrap .fi{ margin-bottom:0; }
+.ac{ position:absolute; z-index:20; left:0; right:0; top:calc(100% + 5px); margin:0; padding:6px;
+  list-style:none; max-height:216px; overflow-y:auto; background:#fff;
+  border:1px solid rgba(61,85,119,.22); border-radius:10px; box-shadow:0 12px 28px rgba(45,58,82,.16); }
+.ac li{ padding:11px 12px; border-radius:7px; cursor:pointer; font-size:16px; }
+.ac li:hover{ background:#eef1f6; color:var(--biru-tua); }
+.fi.err{ border-color:#b4404f; background:#fffafa; }
+.fld-err{ margin:-10px 0 16px; font-size:14px; line-height:1.45; color:#a3313f; }
+.pax-hint{ margin:-10px 0 16px; font-size:14px; color:var(--biru-tua); opacity:.8; }
+.seg{ display:flex; gap:10px; margin-bottom:18px; }
+.sg{ flex:1; position:relative; cursor:pointer; }
+.sg input{ position:absolute; opacity:0; pointer-events:none; }
+.sg span{ display:block; text-align:center; padding:11px 8px; font-size:15px; font-weight:700; color:var(--biru-tua);
+  background:#fff; border:1px solid rgba(61,85,119,.25); border-radius:99px; transition:.2s; }
+.sg input:checked + span{ background:var(--biru-tua); border-color:var(--biru-tua); color:#fff; }
+.sg input:focus-visible + span{ outline:2px solid var(--biru); outline-offset:2px; }
+.sb{ width:100%; padding:14px; font:inherit; font-size:16px; font-weight:700; cursor:pointer;
+  background:var(--biru-tua); color:#fff; border:0; border-radius:99px; transition:filter .2s; }
+.sb:hover{ filter:brightness(1.12); }
+.sb[disabled]{ opacity:.65; cursor:default; }
+.ok{ display:none; margin:18px 0 0; padding:14px 16px; text-align:center; font-size:15px;
+  color:var(--biru-tua); background:#f3f6fa; border:1px solid rgba(61,85,119,.18); border-radius:10px; }
+.ok.show{ display:block; }
+.ok.gagal{ color:#a3313f; border-color:rgba(163,49,63,.35); background:#fff7f7; }
+.wishes-title{ font-weight:400; font-style:italic; font-size:24px; color:var(--biru-tua);
+  text-align:center; margin:40px auto 16px; }
+.wish{ background:#fff; border:1px solid rgba(61,85,119,.12); border-radius:12px; padding:16px 18px; margin-bottom:12px; }
+.wish p{ margin:0; font-style:italic; font-size:16px; line-height:1.55; color:var(--dakwat); overflow-wrap:anywhere; }
+.wish b{ display:block; margin-top:6px; font-weight:400; font-size:14px; color:#7a8296; }
+.wish .balas{ margin-top:10px; padding:8px 12px; border-left:2px solid var(--biru); background:#f3f6fa;
+  border-radius:0 10px 10px 0; }
+.wish .balas small{ display:block; margin-bottom:2px; font-size:11px; font-weight:700; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--biru-tua); }
+.wish .balas span{ display:block; font-size:15px; line-height:1.5; color:var(--dakwat); overflow-wrap:anywhere; }
+.wish-empty{ text-align:center; color:#7a8296; font-size:15px; font-style:italic; }
+.credit{ margin-top:48px; text-align:center; color:var(--biru-tua); }
+.credit p{ margin:0; font-size:14px; letter-spacing:.05em; opacity:.75; font-style:italic; }
+.credit .credit-name{ margin-top:6px; font-size:19px; font-weight:700; font-style:italic; opacity:1; }
+
+@media (prefers-reduced-motion:reduce){
+  .spinning>img, .kupu-diam img{ animation:none; }
+  #cover, #cover.gone{ transition:opacity .3s; transform:none; }
+  .band{ opacity:1; transform:none; transition:none; }
+}
+</style>
+</head>
+<body class="locked">
+
+<div id="cover" role="button" tabindex="0" aria-label="Buka jemputan">
+  <div class="stage" id="stage-cover" data-h="__COVER_H__">
+    <!--__COVER__-->
+  </div>
+</div>
+
+<div class="wrap" id="wrap-main">
+  <div class="stage" id="stage-main" data-h="__MAIN_H__">
+    <!--__MAIN__-->
+  </div>
+</div>
+
+<section class="rsvp" id="rsvp">
+  <div class="rsvp-card">
+    <h2 class="rsvp-title">Sahkan Kehadiran</h2>
+    <p class="rsvp-sub">Mohon sahkan kehadiran anda dan tinggalkan ucapan buat pengantin.</p>
+    <form id="rsvp-form" novalidate>
+      <label class="fl" for="r-nama">Nama</label>
+      <div class="ac-wrap">
+        <input class="fi" id="r-nama" type="text" placeholder="Nama anda"
+               autocomplete="off" role="combobox" aria-expanded="false"
+               aria-autocomplete="list" aria-controls="r-ac">
+        <ul class="ac" id="r-ac" role="listbox" hidden></ul>
+      </div>
+      <p class="fld-err" id="r-nama-err" role="alert" hidden></p>
+
+      <span class="fl">Kehadiran</span>
+      <div class="seg">
+        <label class="sg"><input type="radio" name="hadir" value="Hadir" checked><span>Hadir</span></label>
+        <label class="sg"><input type="radio" name="hadir" value="Tidak Hadir"><span>Tidak Hadir</span></label>
+      </div>
+
+      <div id="wrap-bil">
+        <label class="fl" for="r-bil">Bilangan Kehadiran</label>
+        <input class="fi" id="r-bil" type="number" min="1" max="50" value="1" inputmode="numeric">
+        <p class="pax-hint" id="r-pax-hint" hidden></p>
+      </div>
+
+      <label class="fl" for="r-ucapan">Ucapan</label>
+      <textarea class="fi ta" id="r-ucapan" maxlength="600" placeholder="Tulis ucapan dan doa anda di sini"></textarea>
+
+      <button class="sb" type="submit">Hantar RSVP &amp; Ucapan</button>
+    </form>
+    <p class="ok" id="rsvp-ok" data-ok="Terima kasih. RSVP dan ucapan anda telah berjaya dihantar."></p>
+  </div>
+
+  <h3 class="wishes-title">Ucapan Tetamu</h3>
+  <div id="wishes"><p class="wish-empty">Belum ada ucapan. Jadilah yang pertama.</p></div>
+
+  <footer class="credit">
+    <p>Designed with love by</p>
+    <p class="credit-name">Zaitul Akmal</p>
+  </footer>
+</section>
+
+<script>
+(function(){
+  "use strict";
+  var C = window.CONFIG;
+  var CW = __CANVAS_W__, CONTENT = __CONTENT_W__;
+  var PUSAT = { 'stage-cover': __COVER_CX__, 'stage-main': __MAIN_CX__ };
+  var $ = function(s){ return document.querySelector(s); };
+  function esc(s){ return String(s).replace(/[&<>"']/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+
+  /* ── skala kanvas mengikut lebar skrin (sama seperti kad Zaitul) ── */
+  function fit(){
+    var vw = document.documentElement.clientWidth || window.innerWidth;
+    var PAD = vw < 480 ? 0 : 14;
+    var k = vw >= CW ? 1 : Math.min(1, (vw - PAD * 2) / CONTENT);
+    ['stage-cover', 'stage-main'].forEach(function(id){
+      var st = document.getElementById(id);
+      if (!st) return;
+      var tx = vw / 2 - PUSAT[id] * k;      /* setiap halaman ada pusatnya sendiri */
+      st.style.transform = 'translateX(' + tx.toFixed(2) + 'px) scale(' + k + ')';
+      window.__k = k;
+      var h = parseFloat(st.dataset.h) * k, host = st.parentNode;
+      if (host.id === 'wrap-main') host.style.height = h + 'px';
+      else st.style.top = Math.max(0, ((host.clientHeight || window.innerHeight) - h) / 2).toFixed(2) + 'px';
+    });
+  }
+  fit();
+  window.addEventListener('resize', fit);
+  window.addEventListener('orientationchange', fit);
+
+  /* ── teks yang ditukar mesti muat dalam kotak asalnya ──
+     Diukur dengan offsetWidth (tidak terkesan oleh skala kanvas). */
+  function muatTeks(){
+    document.querySelectorAll('.t[data-muat]').forEach(function(t){
+      var sp = t.firstElementChild, had = parseFloat(t.getAttribute('data-muat'));
+      if (!sp || sp.offsetWidth <= had) return;
+      var r = had / sp.offsetWidth;
+      sp.querySelectorAll('span').forEach(function(s){
+        s.style.fontSize = (parseFloat(s.style.fontSize) * r).toFixed(3) + 'px';
+        s.style.lineHeight = (parseFloat(s.style.lineHeight) * r).toFixed(3) + 'px';
+      });
+    });
+  }
+  (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(muatTeks);
+
+  /* ── buka jemputan: tekan atau leret ke atas ── */
+  var cover = $('#cover'), dibuka = false;
+  function bukaUndangan(){
+    if (dibuka) return;
+    dibuka = true;
+    cover.classList.add('gone');
+    document.body.classList.remove('locked');
+    window.scrollTo(0, 0);
+    setTimeout(function(){ cover.style.display = 'none'; }, 1300);
+    setTimeout(dedahLapisan, 60);
+    bukaBunyi();                       // sentuhan ini yang membenarkan bunyi
+  }
+  cover.addEventListener('click', bukaUndangan);
+  cover.addEventListener('keydown', function(e){
+    if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); bukaUndangan(); }
+  });
+  var mulaY = null;
+  cover.addEventListener('touchstart', function(e){ mulaY = e.touches[0].clientY; }, { passive:true });
+  cover.addEventListener('touchmove', function(e){
+    if (mulaY !== null && mulaY - e.touches[0].clientY > 45){ mulaY = null; bukaUndangan(); }
+  }, { passive:true });
+  cover.addEventListener('wheel', function(e){ if (e.deltaY > 12) bukaUndangan(); }, { passive:true });
+
+  /* ── lapisan muncul semasa skrol ── */
+  var lapisan = Array.prototype.slice.call(document.querySelectorAll('.band'));
+  function dedahLapisan(){
+    if (!lapisan.length || !dibuka) return;
+    var bawah = window.innerHeight * 0.92;
+    for (var i = lapisan.length - 1; i >= 0; i--){
+      var el = lapisan[i], anak = el.children, atas = Infinity;
+      for (var j = 0; j < anak.length; j++){
+        var r = anak[j].getBoundingClientRect();
+        if (r.height || r.width) atas = Math.min(atas, r.top);
+      }
+      if (atas === Infinity) atas = el.getBoundingClientRect().top;
+      if (atas < bawah){
+        el.classList.add('in');
+        setTimeout(function(n){ return function(){ n.classList.add('siap'); }; }(el), 1300);
+        lapisan.splice(i, 1);
+      }
+    }
+  }
+  window.addEventListener('scroll', dedahLapisan, { passive:true });
+  window.addEventListener('resize', dedahLapisan);
+
+  /* ── ikon rumah, pautan Rsvp, butang Google Maps ── */
+  var home = document.getElementById('btn-home');
+  function keAtas(){ window.scrollTo({ top:0, behavior:'smooth' }); setTimeout(dedahLapisan, 400); }
+  if (home){
+    home.addEventListener('click', keAtas);
+    home.addEventListener('keydown', function(ev){
+      if (ev.key === 'Enter' || ev.key === ' '){ ev.preventDefault(); keAtas(); }
+    });
+  }
+  var rl = document.getElementById('rsvp-link');
+  if (rl) rl.addEventListener('click', function(){ $('#rsvp').scrollIntoView({ behavior:'smooth' }); });
+  var peta = document.getElementById('btn-peta');
+  if (peta){ if (C.peta) peta.href = C.peta; else peta.hidden = true; }
+
+  /* ── kiraan detik ── */
+  var target = new Date(C.tarikhMajlis).getTime();
+  function pad(n){ return String(n).padStart(2, '0'); }
+  function tick(){
+    var s = Math.max(0, Math.floor((target - Date.now()) / 1000)), e;
+    if ((e = $('#cd-d'))) e.textContent = pad(Math.floor(s / 86400));
+    if ((e = $('#cd-h'))) e.textContent = pad(Math.floor(s % 86400 / 3600));
+    if ((e = $('#cd-m'))) e.textContent = pad(Math.floor(s % 3600 / 60));
+    if ((e = $('#cd-s'))) e.textContent = pad(s % 60);
+  }
+  function fitCountdown(){   /* bilangan hari 3 digit mesti kekal dalam kotak */
+    var box = $('#countdown'), inner = box && box.querySelector('.cd-num > span');
+    if (!inner) return;
+    inner.parentNode.style.fontSize = '48px';
+    var w = inner.offsetWidth, avail = box.offsetWidth * 0.96;
+    if (w > avail) inner.parentNode.style.fontSize = (48 * avail / w).toFixed(2) + 'px';
+  }
+  tick(); fitCountdown(); setInterval(tick, 1000);
+
+  /* ── muzik: piring hitam "Tap to play" ──
+     Sama seperti kad Zaitul: pemain dimuat bisu semasa kad dibuka, bunyi
+     dibuka bila tetamu sampai ke hujung, atau bila piring ditekan. */
+  var yt = document.getElementById('yt-wrap'), VID = C.lagu || '';
+  var frame = null, sedia = false, berbunyi = false, giliran = [];
+  function ytPost(func, args){
+    if (frame && frame.contentWindow)
+      frame.contentWindow.postMessage(JSON.stringify({ event:'command', func:func, args:args || [] }), '*');
+  }
+  function siapSedia(){
+    if (sedia) return;
+    sedia = true;
+    while (giliran.length){ var c = giliran.shift(); ytPost(c[0], c[1]); }
+  }
+  function hantar(func, args){ if (sedia) ytPost(func, args); else giliran.push([func, args]); }
+  function spin(on){ if (yt) yt.classList.toggle('spinning', on); }
+  /* Sebarang mesej daripada pemain bermakna ia sudah hidup — lebih pantas
+     dan lebih tepat daripada menunggu jeda tetap. */
+  window.addEventListener('message', function(ev){
+    if (frame && ev.source === frame.contentWindow) siapSedia();
+  });
+  function sediakanPemain(){
+    if (frame || !VID) return;
+    frame = document.createElement('iframe');
+    frame.id = 'yt-frame'; frame.title = 'Muzik latar'; frame.allow = 'autoplay; encrypted-media';
+    frame.addEventListener('load', function(){
+      if (frame.contentWindow)
+        frame.contentWindow.postMessage(JSON.stringify({ event:'listening' }), '*');
+      setTimeout(siapSedia, 700);            /* sandaran kalau mesej tidak sampai */
+    });
+    frame.src = 'https://www.youtube.com/embed/' + encodeURIComponent(VID) +
+      '?enablejsapi=1&autoplay=1&mute=1&loop=1&playsinline=1&controls=0&modestbranding=1&playlist=' +
+      encodeURIComponent(VID);
+    document.body.appendChild(frame);
+  }
+  function bukaBunyi(){
+    if (berbunyi || !VID) return;
+    berbunyi = true; sediakanPemain();
+    hantar('unMute'); hantar('setVolume', [55]); hantar('playVideo'); spin(true);
+  }
+  function tutupBunyi(){ berbunyi = false; hantar('pauseVideo'); hantar('mute'); spin(false); }
+  if (yt) yt.addEventListener('click', function(){ berbunyi ? tutupBunyi() : bukaBunyi(); });
+  /* Muat pemain (bisu) seawal mungkin supaya lagu sudah ditimbal sebelum
+     tetamu membuka kad. Autoplay bisu sentiasa dibenarkan pelayar. */
+  if (document.readyState === 'complete') sediakanPemain();
+  else window.addEventListener('load', sediakanPemain);
+  document.addEventListener('pointerdown', sediakanPemain, { once:true, passive:true });
+  var autoDone = false;
+  function checkEnd(){
+    if (autoDone || !dibuka) return;
+    var doc = document.documentElement, y = window.scrollY || doc.scrollTop || 0;
+    if (y + window.innerHeight < doc.scrollHeight - 220) return;
+    autoDone = true;
+    window.removeEventListener('scroll', checkEnd);
+    bukaBunyi();
+    document.addEventListener('pointerdown', function(){
+      if (berbunyi){ hantar('unMute'); hantar('setVolume', [55]); hantar('playVideo'); }
+    }, { once:true });
+  }
+  window.addEventListener('scroll', checkEnd, { passive:true });
+
+  /* ── pangkalan data (Firestore REST — tiada SDK luar) ── */
+  var DB = C.rsvpDb || {};
+  function dbUrl(koleksi){
+    if (!DB.projectId || !DB.apiKey || !koleksi) return null;
+    return 'https://firestore.googleapis.com/v1/projects/' + DB.projectId +
+           '/databases/(default)/documents/' + koleksi + '?key=' + encodeURIComponent(DB.apiKey);
+  }
+  function tulis(koleksi, fields){
+    var url = dbUrl(koleksi);
+    if (!url) return Promise.reject(new Error('tiada-db'));
+    return fetch(url, { method:'POST', headers:{ 'Content-Type':'application/json' },
+                        body: JSON.stringify({ fields: fields }) })
+      .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); });
+  }
+  function lukisUcapan(senarai){
+    $('#wishes').innerHTML = senarai.length
+      ? senarai.map(function(u){
+          return '<div class="wish"><p>&ldquo;' + esc(u.teks) + '&rdquo;</p><b>&mdash; ' + esc(u.nama) + '</b>' +
+            (u.balasan ? '<div class="balas"><small>&#8617; Balasan pengantin</small><span>' + esc(u.balasan) +
+                         '</span></div>' : '') + '</div>';
+        }).join('')
+      : '<p class="wish-empty">Belum ada ucapan. Jadilah yang pertama.</p>';
+  }
+  function muatUcapan(){
+    var url = dbUrl(DB.ucapan);
+    if (!url) return;
+    fetch(url + '&pageSize=200')
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(d){
+        if (!d) return;
+        var a = (d.documents || []).map(function(doc){
+          var f = doc.fields || {};
+          return { nama:(f.nama || {}).stringValue || '', teks:(f.teks || {}).stringValue || '',
+                   masa:(f.masa || {}).stringValue || '', balasan:((f.balasan || {}).stringValue || '').trim() };
+        }).filter(function(u){ return u.teks; });
+        a.sort(function(x, y){ return (y.masa || '').localeCompare(x.masa || ''); });
+        lukisUcapan(a);
+      }).catch(function(){});
+  }
+  muatUcapan();
+
+  /* ── penapis senarai jemputan ── */
+  var TETAMU = (window.TETAMU || []).map(function(g){
+    return (typeof g === 'string') ? { nama:g, pax:0 } : { nama:g.nama, pax:g.pax || 0 };
+  }).filter(function(g){ return g.nama; });
+  var BERTAPIS = TETAMU.length > 0;
+  function norm(s){
+    s = String(s).toLowerCase();
+    if (s.normalize) s = s.normalize('NFD').replace(/[̀-ͯ]/g, '');
+    return s.replace(/[^a-z0-9 ]+/g, ' ').replace(/\s+/g, ' ').trim();
+  }
+  var INDEX = TETAMU.map(function(g){ return { g:g, k:norm(g.nama) }; });
+  var elNama = $('#r-nama'), elAc = $('#r-ac'), elErr = $('#r-nama-err');
+  var elBil = $('#r-bil'), elPax = $('#r-pax-hint'), pilihan = null;
+
+  function cariTepat(v){
+    var k = norm(v);
+    if (!k) return null;
+    for (var i = 0; i < INDEX.length; i++) if (INDEX[i].k === k) return INDEX[i].g;
+    return null;
+  }
+  function cadangan(v){
+    var k = norm(v), out = [];
+    if (k.length < 2) return out;
+    for (var i = 0; i < INDEX.length && out.length < 8; i++)
+      if (INDEX[i].k.indexOf(k) !== -1) out.push(INDEX[i].g);
+    return out;
+  }
+  function tutupAc(){ elAc.hidden = true; elAc.innerHTML = ''; elNama.setAttribute('aria-expanded', 'false'); }
+  function tunjukPax(g){
+    if (g && g.pax > 0){
+      elBil.max = g.pax;
+      if (+elBil.value > g.pax) elBil.value = g.pax;
+      elPax.textContent = 'Jemputan ini untuk ' + g.pax + ' orang.';
+      elPax.hidden = false;
+    } else { elBil.max = 50; elPax.hidden = true; }
+  }
+  function pilih(g){
+    pilihan = g; elNama.value = g.nama; elNama.classList.remove('err');
+    elErr.hidden = true; tunjukPax(g); tutupAc();
+  }
+  function lukisAc(list){
+    if (!list.length){ tutupAc(); return; }
+    elAc.innerHTML = '';
+    list.forEach(function(g){
+      var li = document.createElement('li');
+      li.textContent = g.nama; li.setAttribute('role', 'option');
+      li.addEventListener('mousedown', function(ev){ ev.preventDefault(); pilih(g); });
+      elAc.appendChild(li);
+    });
+    elAc.hidden = false; elNama.setAttribute('aria-expanded', 'true');
+  }
+  if (BERTAPIS){
+    elNama.setAttribute('placeholder', 'Taip nama anda seperti dalam jemputan');
+    elNama.addEventListener('input', function(){
+      pilihan = cariTepat(elNama.value);
+      elNama.classList.remove('err'); elErr.hidden = true;
+      tunjukPax(pilihan); lukisAc(cadangan(elNama.value));
+    });
+    elNama.addEventListener('blur', function(){ setTimeout(tutupAc, 120); });
+    elNama.addEventListener('keydown', function(ev){
+      if (ev.key === 'Escape') tutupAc();
+      if (ev.key === 'Enter' && !elAc.hidden){
+        var first = elAc.querySelector('li');
+        if (first){ ev.preventDefault(); first.dispatchEvent(new MouseEvent('mousedown')); }
+      }
+    });
+  }
+  function sahNama(){
+    var v = elNama.value.trim();
+    if (!BERTAPIS){
+      if (v) return true;
+      elErr.textContent = 'Sila isi nama anda.';
+    } else {
+      var g = pilihan || cariTepat(v);
+      if (g){ pilihan = g; return true; }
+      elErr.textContent = v
+        ? 'Nama ini tiada dalam senarai jemputan. Sila semak ejaan, atau hubungi keluarga pengantin.'
+        : 'Sila isi nama anda.';
+    }
+    elNama.classList.add('err'); elErr.hidden = false; elNama.focus();
+    return false;
+  }
+  document.querySelectorAll('input[name=hadir]').forEach(function(r){
+    r.addEventListener('change', function(){
+      $('#wrap-bil').style.display = (r.value === 'Hadir' && r.checked) ? '' : 'none';
+    });
+  });
+
+  var form = $('#rsvp-form'), btnHantar = form.querySelector('.sb');
+  var labelHantar = btnHantar.textContent, okBox = $('#rsvp-ok');
+  form.addEventListener('submit', function(ev){
+    ev.preventDefault();
+    if (!sahNama()) return;
+    var nama   = pilihan ? pilihan.nama : elNama.value.trim();   // guna ejaan rasmi
+    var hadir  = document.querySelector('input[name=hadir]:checked').value;
+    var bil    = parseInt(elBil.value, 10) || 1;
+    var ucapan = $('#r-ucapan').value.trim();
+    if (pilihan && pilihan.pax > 0 && bil > pilihan.pax) bil = pilihan.pax;
+    bil = Math.min(Math.max(bil, 1), 50);
+    if (hadir !== 'Hadir') bil = 0;
+    var masa = new Date().toISOString();
+
+    btnHantar.disabled = true; btnHantar.textContent = 'Menghantar…';
+    okBox.classList.remove('show', 'gagal');
+    tulis(DB.rsvp, {
+      nama:{ stringValue:nama }, kehadiran:{ stringValue:hadir },
+      bilangan:{ integerValue:String(bil) }, ucapan:{ stringValue:ucapan }, masa:{ stringValue:masa }
+    }).then(function(){
+      if (ucapan){
+        tulis(DB.ucapan, { nama:{ stringValue:nama }, teks:{ stringValue:ucapan },
+                           masa:{ stringValue:masa } }).then(muatUcapan, muatUcapan);
+      }
+      okBox.textContent = okBox.getAttribute('data-ok');
+      okBox.classList.add('show');
+      form.reset(); pilihan = null; elPax.hidden = true; elBil.max = 50;
+      $('#wrap-bil').style.display = '';
+      var wa = (C.waRsvp || '').replace(/\D/g, '');
+      if (wa){
+        var msg = ['*RSVP — Walimatul Urus Eusoff*', 'Nama: ' + nama, 'Kehadiran: ' + hadir]
+          .concat(hadir === 'Hadir' ? ['Bilangan: ' + bil + ' orang'] : [])
+          .concat(ucapan ? ['Ucapan: ' + ucapan] : []).join('\n');
+        window.open('https://wa.me/' + wa + '?text=' + encodeURIComponent(msg), '_blank', 'noopener');
+      }
+    }).catch(function(){
+      /* jangan beritahu tetamu ia berjaya kalau sebenarnya gagal */
+      okBox.textContent = 'Maaf, RSVP anda tidak dapat dihantar. Sila cuba lagi, atau hubungi keluarga pengantin.';
+      okBox.classList.add('show', 'gagal');
+    }).then(function(){ btnHantar.disabled = false; btnHantar.textContent = labelHantar; });
+  });
+})();
+</script>
+</body>
+</html>
