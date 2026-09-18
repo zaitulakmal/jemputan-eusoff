@@ -70,7 +70,10 @@ GESER_Y = {"1:24": 24.3}
 SKALA_FON = {"1:17.7": 1.25}
 GESER_X = {"1:24": -5.6,
            "1:22": -24.0}   # lencana hashtag: bunga kala lili menindih teks kad tarikh
-GESER_ANAK_X = {"1:17.7": -7.4}
+GESER_ANAK_X = {"1:17.7": -7.4,
+                # sulur bunga kanan gerbang duduk 9.2px lebih ke kanan daripada
+                # pasangannya di kiri (jurang tepi 42.2 lwn 51.4) -> terkeluar lengkung
+                "1:17.4": -9.2}
 
 # Aturcara belum diberi -> kad "Tentatives" (kumpulan 1:16) disembunyikan dan
 # segala di bawahnya dinaikkan ke tempatnya.
