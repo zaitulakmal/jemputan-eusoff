@@ -71,9 +71,9 @@ SKALA_FON = {"1:17.7": 1.25}
 GESER_X = {"1:24": -5.6,
            "1:22": -24.0}   # lencana hashtag: bunga kala lili menindih teks kad tarikh
 GESER_ANAK_X = {"1:17.7": -7.4,
-                # sulur bunga kanan gerbang duduk 9.2px lebih ke kanan daripada
-                # pasangannya di kiri (jurang tepi 42.2 lwn 51.4) -> terkeluar lengkung
-                "1:17.4": -9.2}
+                # sulur bunga kanan gerbang: kotaknya 4.6px lebih ke kanan
+                # daripada pusat gerbang (diukur dari data templat)
+                "1:17.4": -9.1}
 
 # Aturcara belum diberi -> kad "Tentatives" (kumpulan 1:16) disembunyikan dan
 # segala di bawahnya dinaikkan ke tempatnya.
@@ -451,8 +451,15 @@ def render_imej(e, laluan, x, y, k, out):
     elif laluan == RUMAH:
         cls, attr = "im home-btn", ' id="btn-home" role="button" tabindex="0" aria-label="Kembali ke atas"'
     css = f"left:{x:.2f}px;top:{y:.2f}px;width:{w:.2f}px;height:{h:.2f}px"
+    # Canva menyimpan cerminan imej dalam a.G (mendatar) dan a.H (menegak).
+    # Tanpa ini, sulur bunga kanan gerbang dilukis serupa (bukan cerminan) yang kiri.
+    tf = []
     if e.get("E"):
-        css += f";transform:rotate({e['E']:.4f}deg);transform-origin:50% 50%"
+        tf.append(f"rotate({e['E']:.4f}deg)")
+    if a.get("G") or a.get("H"):
+        tf.append(f"scale({-1 if a.get('G') else 1},{-1 if a.get('H') else 1})")
+    if tf:
+        css += ";transform:" + " ".join(tf) + ";transform-origin:50% 50%"
     out.append(f'<div class="{cls}"{attr} style="{css}"><img src="assets/kad/{nama}" '
                f'style="left:{bx:.2f}px;top:{by:.2f}px;width:{bw:.2f}px;height:{bh:.2f}px" '
                f'alt="" loading="lazy"></div>')
