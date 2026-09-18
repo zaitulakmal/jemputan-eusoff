@@ -81,6 +81,11 @@ Setiap penggantian mesti wujud dalam templat — kalau tidak, bina gagal dengan 
   tulis/ubah/buang balasan (medan `balasan` + `masaBalasan` pada dokumen ucapan). Kad memaparkan
   "Balasan pengantin" di bawah ucapan. Rules: `isUcapanEusoffSah` (update pemilik sahaja); create
   kekal `isUcapanSah`, jadi tetamu tidak boleh mencipta ucapan yang siap berbalasan. Diuji 15/15.
+- **Poster jemputan** (18 Sep 2026): `/poster` memaparkan `assets/poster.png` (1080x1920, IG Story)
+  dengan butang muat turun. Susun atur dirujuk dari kad Kretivkur pilihan Zaitul, dibina semula
+  dengan aset repo sendiri (ranting `taman-kiri.svg`, fon `kad-alexbrush`/`kad-bodoni`) + gambar
+  `assets/gambar/1.jpg`. Penjana: `tools/poster/` (jalankan `buat-poster.py` kemudian `shot-poster.js`).
+  Poster ialah aset nama tetap, jadi dirujuk sebagai `assets/poster.png?v=1` (peraturan 4).
 - `authDomain` dalam `senarai.html` = domain laman sendiri (pembetulan "missing initial
   state" di iPhone, dibawa dari kad Zaitul).
 
