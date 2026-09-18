@@ -42,8 +42,9 @@ GANTI = {
     "1:21":   [("Dataran Gangsa", "Asiana Grand Hall")],
     "1:22.2": [("Ainman", "EusoffZaitul")],
     # nama bapa sahaja (keputusan Zaitul 17 Sep 2026)
-    "1:17.3": [("Adi Sazlizan bin Saklan\n&\nNorzalina binti Zainal", "Zainin Bin Shah Bahari")],
-    "1:17.9": [("majlis perkahwinan puteri kami.", "Majlis Walimatul Urus putera kami.")],
+    "1:17.3": [("Adi Sazlizan bin Saklan\n&\nNorzalina binti Zainal", "Zainin Bin Shah Bahari"),
+               ("Illahi, kami", "Illahi, saya")],       # seorang penjemput sahaja
+    "1:17.9": [("majlis perkahwinan puteri kami.", "Majlis Walimatul Urus putera saya.")],
     # nama penuh pengantin belum diberi — nama pendek dahulu, lelaki dahulu
     "1:17.7": [("Nur Ain binti Adi Sazlizan", "Eusoff"),
                ("Aiman Afzan bin \nMohd Shukri", "Zaitul")],
@@ -54,7 +55,7 @@ GANTI = {
 # jalan kalau melebihi (tools/shell.html, muatTeks)
 # 1:21 lebih sempit: bunga kala lili lencana menindih tepi kiri kad tarikh
 # 1:16.8 (aturcara): baris terpanjang mesti tidak mencecah ikon di kirinya
-MUAT = {"0:4": 560, "1:12": 132, "1:18": 250, "1:20": 250, "1:21": 180, "1:16.8": 185,
+MUAT = {"0:4": 560, "1:12": 132, "1:18": 250, "1:20": 180, "1:21": 160, "1:16.8": 185,
         "1:22.2": 150, "1:9.2": 170, "1:17.3": 250, "1:17.7": 330}
 # kotak teks yang dilebarkan sama rata dari tengah (kotak asal selebar "Ain")
 LEBARKAN = {"1:12": 150}
@@ -67,7 +68,8 @@ GESER_Y = {"1:24": 24.3}
 # Nama pengantin (1:17.7) dan "dan pilihan hatinya" (1:24): nama pendek kita
 # dibesarkan, dan ketiga-tiga baris dipusatkan tepat (17 Sep 2026, diukur dari render).
 SKALA_FON = {"1:17.7": 1.25}
-GESER_X = {"1:24": -5.6}
+GESER_X = {"1:24": -5.6,
+           "1:22": -24.0}   # lencana hashtag: bunga kala lili menindih teks kad tarikh
 GESER_ANAK_X = {"1:17.7": -7.4}
 
 # Aturcara belum diberi -> kad "Tentatives" (kumpulan 1:16) disembunyikan dan
