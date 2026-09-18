@@ -108,6 +108,9 @@ GESER_ANAK_Y = {"1:17.7": 6.5,                            # nama pengantin -> ja
 # Renda kad aturcara (451..989) lebih lebar daripada kandungan lain. Kalau
 # dikira, seluruh kad mengecil ~12% di telefon; biar ia terkeluar sedikit.
 TIDAK_DIKIRA_SEMPADAN = {"1:16"}
+# Renda kad aturcara 538px lebar — lebih lebar daripada kandungan (506px), jadi
+# ia terkeluar tepi skrin telefon. Kecilkan seluruh kumpulan dari pusatnya.
+SKALA_KUMPULAN = {"1:16": 480 / 538.1}
 
 # ═══ WARNA ═════════════════════════════════════════════════════════════════
 NUDE, BIRU_TUA, BIRU = warna.NUDE, warna.BIRU_TUA, warna.BIRU
@@ -612,17 +615,22 @@ def render(e, laluan, x, y, k, out):
     elif laluan == KIRAAN:
         render_kiraan(x, y, e["D"] * k, e["C"] * k, out)
     elif t == "H":
+        f = SKALA_KUMPULAN.get(laluan, 1.0)
+        if f != 1.0:                       # kecilkan kumpulan dari pusatnya
+            x += e["D"] * k * (1 - f) / 2
+            y += e["C"] * k * (1 - f) / 2
+            k *= f
         kk = k * (e["D"] / e["b"] if e.get("b") else 1.0)
         kotak = {}
         for i, c in enumerate(e.get("c", [])):
             anak = f"{laluan}.{i}"
-            cx = x + c.get("B", 0) * kk + GESER_ANAK_X.get(anak, 0.0)
-            cy = y + c.get("A", 0) * kk + GESER_ANAK_Y.get(anak, 0.0)
+            cx = x + c.get("B", 0) * kk + GESER_ANAK_X.get(anak, 0.0) * f
+            cy = y + c.get("A", 0) * kk + GESER_ANAK_Y.get(anak, 0.0) * f
             kotak[anak] = (cx, cy, c.get("D", 0) * kk, c.get("C", 0) * kk)
             render(c, anak, cx, cy, kk, out)
         for fail, atas, bawah, lebar in IKON_TAMBAHAN:
             if atas in kotak and bawah in kotak:
-                render_ikon_tambahan(fail, kotak[atas], kotak[bawah], lebar, out)
+                render_ikon_tambahan(fail, kotak[atas], kotak[bawah], lebar * f, out)
     elif t == "K":
         render_teks(e, laluan, x, y, k, out)
     elif t == "I":
