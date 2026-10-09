@@ -197,6 +197,17 @@ body.locked{ overflow:hidden; height:100vh; height:100dvh; }
   text-transform:uppercase; color:var(--biru-tua); }
 .wish .balas span{ display:block; font-size:15px; line-height:1.5; color:var(--dakwat); overflow-wrap:anywhere; }
 .wish-empty{ text-align:center; color:#7a8296; font-size:15px; font-style:italic; }
+/* Senarai ucapan boleh jadi sangat panjang bila ramai tetamu menghantar, jadi
+   ia discroll sendiri dan tidak lagi memanjangkan halaman tanpa had. */
+#wishes{
+  max-height:min(62vh,520px); overflow-y:auto; overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch; scrollbar-gutter:stable both-edges;
+  scrollbar-width:thin; scrollbar-color:rgba(125,147,178,.55) transparent;
+}
+#wishes::-webkit-scrollbar{ width:6px; }
+#wishes::-webkit-scrollbar-track{ background:transparent; }
+#wishes::-webkit-scrollbar-thumb{ background:rgba(125,147,178,.55); border-radius:3px; }
+#wishes .wish:last-child{ margin-bottom:0; }
 .credit{ margin-top:48px; text-align:center; color:var(--biru-tua); }
 .credit p{ margin:0; font-size:14px; letter-spacing:.05em; opacity:.75; font-style:italic; }
 .credit .credit-name{ margin-top:6px; font-size:19px; font-weight:700; font-style:italic; opacity:1; }
